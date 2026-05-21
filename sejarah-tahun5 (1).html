@@ -1,0 +1,2572 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sejarah Tahun 5 – Jom Belajar Dengan Interaktif!</title>
+<style>
+  /* ===== GOOGLE FONTS ===== */
+  @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+  /* ===== CSS VARIABLES ===== */
+  :root {
+    --tq: #00B4D8;
+    --tq-dark: #0077A8;
+    --tq-light: #90E0EF;
+    --gold: #FFD700;
+    --gold-dark: #B8860B;
+    --black: #0D1117;
+    --white: #FFFFFF;
+    --red: #DC143C;
+    --blue-flag: #003580;
+    --bg-dark: #0D1117;
+    --bg-card: #131C27;
+    --bg-card2: #1A2740;
+    --text-main: #E8F4FD;
+    --text-muted: #8AABCC;
+    --shadow: 0 8px 32px rgba(0,180,216,0.18);
+    --radius: 20px;
+    --font: 'Comic Neue', 'Comic Sans MS', cursive;
+    --transition: all 0.35s cubic-bezier(.4,0,.2,1);
+  }
+  [data-theme="light"] {
+    --bg-dark: #F0F8FF;
+    --bg-card: #FFFFFF;
+    --bg-card2: #E8F4FD;
+    --text-main: #0D1117;
+    --text-muted: #336699;
+    --black: #FFFFFF;
+    --shadow: 0 8px 32px rgba(0,100,180,0.13);
+  }
+
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 18px; }
+  body {
+    font-family: var(--font);
+    background: var(--bg-dark);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.4s, color 0.4s;
+  }
+  h1,h2,h3,h4 { font-family: var(--font); font-weight: 700; }
+  button, input, select, textarea { font-family: var(--font); }
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; }
+
+  /* ===== LOADING SCREEN ===== */
+  #loading-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #050a10;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 0.7s ease;
+  }
+  #loading-screen.hide { opacity: 0; pointer-events: none; }
+  .loader-ring {
+    width: 120px; height: 120px;
+    border: 6px solid transparent;
+    border-top: 6px solid var(--tq);
+    border-right: 6px solid var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    position: relative;
+  }
+  .loader-ring::after {
+    content: '📚';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 2.5rem;
+    animation: pulse 1s ease-in-out infinite;
+  }
+  .loader-shapes {
+    position: absolute; inset: 0;
+    overflow: hidden; pointer-events: none;
+  }
+  .loader-shapes span {
+    position: absolute;
+    border-radius: 50%;
+    animation: floatShape 4s ease-in-out infinite;
+  }
+  .loader-shapes span:nth-child(1) { width:80px;height:80px;background:rgba(0,180,216,0.15);top:10%;left:15%;animation-delay:0s; }
+  .loader-shapes span:nth-child(2) { width:50px;height:50px;background:rgba(255,215,0,0.12);top:70%;left:80%;animation-delay:1s; }
+  .loader-shapes span:nth-child(3) { width:100px;height:100px;background:rgba(220,20,60,0.1);top:40%;left:60%;animation-delay:2s; }
+  .loader-shapes span:nth-child(4) { width:60px;height:60px;background:rgba(0,53,128,0.2);top:80%;left:20%;animation-delay:0.5s; }
+  .loader-text { color: var(--tq); font-size: 1.3rem; margin-top: 1.5rem; letter-spacing: 2px; }
+  .loader-bar { width: 200px; height: 6px; background: #1a2740; border-radius: 10px; margin-top: 1rem; overflow: hidden; }
+  .loader-bar-fill { height: 100%; background: linear-gradient(90deg,var(--tq),var(--gold)); border-radius: 10px; animation: loadBar 2.5s ease forwards; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.15)} }
+  @keyframes floatShape { 0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.08)} }
+  @keyframes loadBar { from{width:0}to{width:100%} }
+
+  /* ===== TOPBAR ===== */
+  #topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(13,17,23,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--tq);
+    padding: 0.5rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem;
+    transition: background 0.4s;
+  }
+  [data-theme="light"] #topbar { background: rgba(240,248,255,0.97); }
+  .topbar-left { display: flex; align-items: center; gap: 0.7rem; }
+  .topbar-logo { font-size: 1.6rem; cursor: pointer; transition: transform 0.3s; }
+  .topbar-logo:hover { transform: rotate(15deg) scale(1.1); }
+  .topbar-title { font-size: 1rem; font-weight: 700; color: var(--tq); line-height: 1.2; }
+  .topbar-title span { color: var(--gold); display: block; font-size: 0.78rem; }
+  .topbar-right { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+  #clock-display { font-size: 0.95rem; color: var(--gold); font-weight: 700; white-space: nowrap; }
+  .btn-icon {
+    background: var(--bg-card2); border: 2px solid var(--tq);
+    color: var(--tq); border-radius: 12px; padding: 0.4rem 0.8rem;
+    cursor: pointer; font-size: 1.2rem; transition: var(--transition);
+    display: flex; align-items: center; gap: 0.3rem;
+  }
+  .btn-icon:hover { background: var(--tq); color: var(--black); transform: translateY(-2px); }
+  .music-btn { font-size: 1rem; }
+
+  /* ===== PAGES SYSTEM ===== */
+  .page { display: none; min-height: 100vh; padding-top: 70px; }
+  .page.active { display: block; animation: pageIn 0.5s ease; }
+  @keyframes pageIn { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
+
+  /* ===== HERO / HOME PAGE ===== */
+  #page-home { overflow: hidden; }
+  .hero-bg {
+    position: relative;
+    min-height: calc(100vh - 70px);
+    display: flex; flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Jalur Gemilang Animated Stripes */
+  .flag-stripes {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 8px;
+    display: flex;
+    overflow: hidden;
+  }
+  .stripe {
+    flex: 1; min-width: 20px;
+    animation: stripeMove 3s linear infinite;
+  }
+  .stripe:nth-child(odd) { background: var(--red); }
+  .stripe:nth-child(even) { background: var(--white); }
+  @keyframes stripeMove {
+    0%{transform:translateX(0)}100%{transform:translateX(-20px)}
+  }
+
+  /* Animated background blobs */
+  .hero-blobs { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .blob {
+    position: absolute; border-radius: 50%;
+    animation: blobFloat 8s ease-in-out infinite;
+    filter: blur(50px); opacity: 0.15;
+  }
+  .blob:nth-child(1){width:350px;height:350px;background:var(--tq);top:-100px;left:-100px;animation-delay:0s;}
+  .blob:nth-child(2){width:250px;height:250px;background:var(--gold);top:50%;right:-80px;animation-delay:2s;}
+  .blob:nth-child(3){width:200px;height:200px;background:var(--red);bottom:-50px;left:30%;animation-delay:4s;}
+  @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(20px,-30px) scale(1.08)} }
+
+  /* War animation scene */
+  .war-scene {
+    position: relative; width: 100%; max-width: 600px;
+    height: 160px; margin: 1.5rem 0;
+    background: linear-gradient(180deg, rgba(0,180,216,0.08) 0%, rgba(0,120,100,0.15) 100%);
+    border-radius: 20px; overflow: hidden;
+    border: 2px solid rgba(0,180,216,0.25);
+  }
+  .war-ground {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 30px;
+    background: linear-gradient(180deg, #1a4a2a, #0d2a18);
+    border-radius: 0 0 18px 18px;
+  }
+  .war-sky {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(180deg,rgba(0,20,50,0.8),transparent);
+  }
+  .soldier {
+    position: absolute;
+    bottom: 28px;
+    font-size: 2.2rem;
+    animation: march 3s linear infinite;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+  .soldier-1 { animation-delay: 0s; }
+  .soldier-2 { animation-delay: 0.8s; }
+  .soldier-3 { animation-delay: 1.6s; }
+  @keyframes march {
+    0%{left:-60px;transform:scaleX(1);}
+    50%{left:55%;}
+    100%{left:110%;transform:scaleX(1);}
+  }
+  .flag-icon {
+    position: absolute; right: 20px; bottom: 26px;
+    font-size: 2.5rem;
+    animation: flagWave 1.5s ease-in-out infinite;
+  }
+  @keyframes flagWave { 0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)} }
+  .star-burst {
+    position: absolute; font-size: 1rem;
+    animation: burst 2s ease-in-out infinite;
+    opacity: 0.7;
+  }
+  .star-burst:nth-child(1){top:10px;left:20%;animation-delay:0.2s;}
+  .star-burst:nth-child(2){top:20px;left:45%;animation-delay:0.9s;}
+  .star-burst:nth-child(3){top:5px;left:70%;animation-delay:0.5s;}
+  @keyframes burst { 0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.4) rotate(20deg)} }
+
+  .hero-title {
+    text-align: center; z-index: 2;
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
+    font-weight: 700; line-height: 1.3;
+    text-shadow: 0 2px 20px rgba(0,180,216,0.4);
+  }
+  .hero-title .line1 { color: var(--gold); display: block; }
+  .hero-title .line2 { color: var(--tq); display: block; }
+  .hero-title .line3 { color: var(--white); display: block; font-size: 0.6em; margin-top: 0.3rem; }
+  .hero-subtitle {
+    text-align: center; color: var(--text-muted);
+    font-size: 1.1rem; margin-bottom: 1rem; z-index: 2;
+  }
+
+  /* ===== TOPIC CARDS ===== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 100%; max-width: 1000px;
+    z-index: 2; margin-top: 1rem;
+  }
+  .topic-card {
+    background: var(--bg-card);
+    border: 2px solid rgba(0,180,216,0.25);
+    border-radius: var(--radius);
+    padding: 1.8rem 1.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative; overflow: hidden;
+    text-align: left;
+  }
+  .topic-card::before {
+    content: ''; position: absolute;
+    inset: 0; border-radius: var(--radius);
+    background: linear-gradient(135deg, transparent 60%, rgba(0,180,216,0.1));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .topic-card:hover { transform: translateY(-8px) scale(1.02); border-color: var(--tq); box-shadow: var(--shadow); }
+  .topic-card:hover::before { opacity: 1; }
+  .topic-card:nth-child(2) { border-color: rgba(255,215,0,0.25); }
+  .topic-card:nth-child(2):hover { border-color: var(--gold); box-shadow: 0 8px 32px rgba(255,215,0,0.18); }
+  .topic-card:nth-child(3) { border-color: rgba(220,20,60,0.25); }
+  .topic-card:nth-child(3):hover { border-color: var(--red); box-shadow: 0 8px 32px rgba(220,20,60,0.18); }
+  .card-icon { font-size: 3rem; margin-bottom: 1rem; display: block; animation: iconBounce 2s ease-in-out infinite; }
+  @keyframes iconBounce { 0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)} }
+  .card-num { font-size: 0.8rem; color: var(--tq); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem; }
+  .card-title { font-size: 1.3rem; font-weight: 700; color: var(--gold); margin-bottom: 0.8rem; }
+  .card-sk { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .card-sp { font-size: 0.82rem; color: var(--text-main); line-height: 1.6; }
+  .card-badge {
+    display: inline-block; margin-top: 1rem;
+    background: linear-gradient(90deg,var(--tq),var(--tq-dark));
+    color: white; border-radius: 20px; padding: 0.3rem 1rem;
+    font-size: 0.8rem; font-weight: 700;
+    transition: var(--transition);
+  }
+  .topic-card:nth-child(2) .card-badge { background: linear-gradient(90deg,var(--gold),var(--gold-dark)); color: #000; }
+  .topic-card:nth-child(3) .card-badge { background: linear-gradient(90deg,var(--red),#8B0000); }
+  .topic-card:hover .card-badge { transform: scale(1.05); }
+
+  /* ===== TOPIC INNER PAGE ===== */
+  .topic-page { display: none; min-height: 100vh; padding-top: 70px; }
+  .topic-page.active { display: block; animation: pageIn 0.5s ease; }
+
+  .topic-header {
+    background: linear-gradient(135deg, var(--bg-card), var(--bg-card2));
+    border-bottom: 2px solid var(--tq);
+    padding: 1.5rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .topic-header-icon { font-size: 3rem; }
+  .topic-header-info h2 { font-size: 1.5rem; color: var(--gold); }
+  .topic-header-info p { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* Sub-nav tabs */
+  .sub-nav {
+    background: var(--bg-card);
+    border-bottom: 2px solid rgba(0,180,216,0.2);
+    padding: 0 1rem;
+    display: flex; gap: 0.3rem;
+    overflow-x: auto; scrollbar-width: none;
+    position: sticky; top: 62px; z-index: 100;
+  }
+  .sub-nav::-webkit-scrollbar { display: none; }
+  .sub-tab {
+    padding: 0.8rem 1rem; border: none; background: none;
+    color: var(--text-muted); font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: var(--transition);
+    font-family: var(--font);
+  }
+  .sub-tab:hover { color: var(--tq); }
+  .sub-tab.active { color: var(--tq); border-bottom-color: var(--tq); }
+
+  /* Content panels */
+  .sub-panel { display: none; padding: 1.5rem; max-width: 900px; margin: 0 auto; }
+  .sub-panel.active { display: block; animation: pageIn 0.4s ease; }
+
+  /* Info cards */
+  .info-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,180,216,0.2);
+    border-radius: var(--radius); padding: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+  .info-card h3 { color: var(--gold); margin-bottom: 0.8rem; font-size: 1.1rem; }
+  .info-card p, .info-card li { font-size: 1rem; line-height: 1.8; color: var(--text-main); }
+  .info-card ul { padding-left: 1.5rem; }
+  .info-card li { margin-bottom: 0.5rem; }
+  .badge-sk {
+    display: inline-block; background: rgba(0,180,216,0.15);
+    border: 1px solid var(--tq); color: var(--tq);
+    border-radius: 8px; padding: 0.3rem 0.8rem;
+    font-size: 0.8rem; margin-bottom: 0.5rem;
+  }
+
+  /* ===== NOTA INTERAKTIF ===== */
+  .nota-section { margin-bottom: 2rem; }
+  .nota-section h3 {
+    font-size: 1.2rem; color: var(--tq);
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nota-visual {
+    background: var(--bg-card2);
+    border-radius: var(--radius); padding: 1.5rem;
+    border-left: 4px solid var(--gold);
+    margin-bottom: 1rem;
+  }
+  .timeline-item {
+    display: flex; gap: 1rem; margin-bottom: 1rem;
+    align-items: flex-start;
+  }
+  .timeline-dot {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg,var(--tq),var(--tq-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+    box-shadow: 0 0 0 4px rgba(0,180,216,0.2);
+    animation: pulse2 2s ease-in-out infinite;
+  }
+  @keyframes pulse2 { 0%,100%{box-shadow:0 0 0 4px rgba(0,180,216,0.2)}50%{box-shadow:0 0 0 8px rgba(0,180,216,0.1)} }
+  .timeline-content h4 { color: var(--gold); font-size: 1rem; margin-bottom: 0.3rem; }
+  .timeline-content p { color: var(--text-main); font-size: 0.95rem; line-height: 1.6; }
+  .hero-card {
+    background: var(--bg-card);
+    border: 2px solid rgba(255,215,0,0.25);
+    border-radius: var(--radius); padding: 1.2rem;
+    display: flex; gap: 1rem; align-items: center;
+    margin-bottom: 0.8rem;
+    transition: var(--transition);
+  }
+  .hero-card:hover { border-color: var(--gold); transform: translateX(6px); }
+  .hero-emoji { font-size: 2.5rem; flex-shrink: 0; }
+  .hero-info h4 { color: var(--gold); margin-bottom: 0.3rem; font-size: 1rem; }
+  .hero-info p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+
+  /* Flashcard */
+  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .flashcard {
+    background: var(--bg-card);
+    border: 2px solid rgba(0,180,216,0.2);
+    border-radius: var(--radius); padding: 1.2rem;
+    cursor: pointer; text-align: center;
+    transition: var(--transition);
+    min-height: 140px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; perspective: 600px;
+  }
+  .flashcard:hover { border-color: var(--tq); transform: rotateY(8deg) translateY(-4px); }
+  .flashcard-front { font-size: 2rem; margin-bottom: 0.5rem; }
+  .flashcard-term { color: var(--tq); font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .flashcard-def { color: var(--text-muted); font-size: 0.82rem; display: none; }
+  .flashcard.flipped .flashcard-def { display: block; }
+  .flashcard.flipped .flashcard-front { display: none; }
+  .flashcard.flipped .flashcard-term { color: var(--gold); }
+
+  /* ===== AKTIVITI ===== */
+  .activity-card {
+    background: var(--bg-card); border-radius: var(--radius);
+    border: 2px solid rgba(0,180,216,0.2); padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .activity-card h3 { color: var(--tq); margin-bottom: 1rem; font-size: 1.1rem; }
+  .word-search-grid {
+    display: grid; grid-template-columns: repeat(10, 1fr);
+    gap: 4px; margin: 1rem 0; max-width: 380px;
+  }
+  .ws-cell {
+    width: 100%; aspect-ratio: 1;
+    background: var(--bg-card2); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; color: var(--text-main);
+    cursor: pointer; transition: var(--transition); user-select: none;
+    border: 1px solid rgba(0,180,216,0.1);
+  }
+  .ws-cell:hover { background: var(--tq); color: white; }
+  .ws-cell.selected { background: var(--gold); color: #000; }
+  .ws-cell.found { background: var(--tq); color: white; }
+
+  /* Match game */
+  .match-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .match-col { display: flex; flex-direction: column; gap: 0.5rem; }
+  .match-item {
+    background: var(--bg-card2); border-radius: 12px;
+    padding: 0.8rem 1rem; cursor: pointer;
+    border: 2px solid rgba(0,180,216,0.15);
+    transition: var(--transition); font-size: 0.9rem;
+    text-align: center;
+  }
+  .match-item:hover { border-color: var(--tq); transform: scale(1.03); }
+  .match-item.selected { border-color: var(--gold); background: rgba(255,215,0,0.1); }
+  .match-item.correct { border-color: #22c55e; background: rgba(34,197,94,0.15); color: #22c55e; }
+  .match-item.wrong { border-color: #ef4444; background: rgba(239,68,68,0.1); animation: shake 0.4s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)} }
+
+  /* Fill blank */
+  .fill-blank-q { font-size: 1.05rem; color: var(--text-main); line-height: 2; margin-bottom: 0.8rem; }
+  .fill-blank-q input {
+    border: none; border-bottom: 3px solid var(--tq);
+    background: transparent; color: var(--gold); font-family: var(--font);
+    font-size: 1rem; font-weight: 700; padding: 0 0.4rem;
+    width: 120px; outline: none; text-align: center;
+  }
+  .fill-blank-q input.correct { border-color: #22c55e; color: #22c55e; }
+  .fill-blank-q input.wrong { border-color: #ef4444; color: #ef4444; }
+
+  /* Drag drop */
+  .drag-source { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 1rem; }
+  .drag-item {
+    background: var(--tq); color: white; border-radius: 20px;
+    padding: 0.4rem 1rem; cursor: grab; font-size: 0.9rem; font-weight: 700;
+    transition: var(--transition); user-select: none;
+  }
+  .drag-item:hover { transform: scale(1.05); }
+  .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+  .drag-target {
+    border: 2px dashed var(--tq); border-radius: 12px;
+    padding: 0.6rem 1rem; min-width: 120px; min-height: 45px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 0.85rem;
+    transition: var(--transition);
+  }
+  .drag-target.over { border-color: var(--gold); background: rgba(255,215,0,0.08); }
+  .drag-target.filled { border-style: solid; border-color: #22c55e; color: var(--text-main); }
+
+  /* Falling items */
+  .catch-game {
+    background: var(--bg-card2); border-radius: 20px;
+    padding: 1rem; position: relative; height: 300px;
+    overflow: hidden; cursor: none;
+    border: 2px solid rgba(0,180,216,0.2);
+  }
+  .catch-item {
+    position: absolute; font-size: 1.8rem;
+    animation: fall linear forwards;
+    cursor: pointer; user-select: none;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+  @keyframes fall { from{top:-40px}to{top:110%} }
+  .catch-basket {
+    position: absolute; bottom: 10px;
+    font-size: 2.5rem; transition: left 0.1s;
+    pointer-events: none;
+  }
+  .catch-score { position: absolute; top: 10px; right: 15px; color: var(--gold); font-weight: 700; font-size: 1.1rem; }
+
+  /* ===== KUIZ ===== */
+  .quiz-start {
+    text-align: center; padding: 3rem 1.5rem;
+  }
+  .quiz-start h2 { color: var(--gold); font-size: 1.8rem; margin-bottom: 1rem; }
+  .quiz-start p { color: var(--text-muted); margin-bottom: 2rem; font-size: 1.05rem; }
+  .input-field {
+    background: var(--bg-card2); border: 2px solid rgba(0,180,216,0.3);
+    color: var(--text-main); border-radius: 12px; padding: 0.8rem 1.2rem;
+    font-family: var(--font); font-size: 1rem; width: 100%; max-width: 300px;
+    outline: none; margin-bottom: 0.8rem; display: block; margin-left: auto; margin-right: auto;
+    transition: var(--transition);
+  }
+  .input-field:focus { border-color: var(--tq); }
+  .btn-main {
+    background: linear-gradient(135deg, var(--tq), var(--tq-dark));
+    color: white; border: none; border-radius: 15px;
+    padding: 0.9rem 2.5rem; font-size: 1.1rem; font-weight: 700;
+    cursor: pointer; transition: var(--transition);
+    font-family: var(--font);
+    box-shadow: 0 4px 20px rgba(0,180,216,0.3);
+  }
+  .btn-main:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,180,216,0.4); }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #000;
+  }
+  .btn-gold:hover { box-shadow: 0 8px 30px rgba(255,215,0,0.4); }
+
+  .quiz-timer-bar {
+    height: 8px; background: var(--bg-card2); border-radius: 10px;
+    margin-bottom: 1.5rem; overflow: hidden;
+  }
+  .quiz-timer-fill {
+    height: 100%; background: linear-gradient(90deg, var(--tq), var(--gold));
+    border-radius: 10px; transition: width 1s linear;
+  }
+  .quiz-timer-fill.warning { background: linear-gradient(90deg, #ef4444, #ff8800); }
+  .quiz-progress { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; text-align: right; }
+  .quiz-question-text { font-size: 1.2rem; color: var(--text-main); margin-bottom: 1.5rem; font-weight: 700; line-height: 1.6; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  .quiz-opt {
+    background: var(--bg-card2); border: 2px solid rgba(0,180,216,0.2);
+    border-radius: 14px; padding: 1rem; cursor: pointer;
+    font-family: var(--font); font-size: 0.95rem; color: var(--text-main);
+    transition: var(--transition); text-align: left; line-height: 1.4;
+  }
+  .quiz-opt:hover { border-color: var(--tq); background: rgba(0,180,216,0.08); transform: translateY(-2px); }
+  .quiz-opt.correct { border-color: #22c55e; background: rgba(34,197,94,0.15); color: #22c55e; }
+  .quiz-opt.wrong { border-color: #ef4444; background: rgba(239,68,68,0.1); color: #ef4444; }
+  .quiz-opt.disabled { pointer-events: none; }
+  .quiz-feedback {
+    text-align: center; padding: 1rem; border-radius: 14px;
+    margin: 1rem 0; font-weight: 700; font-size: 1.1rem;
+    animation: feedbackPop 0.4s ease;
+  }
+  @keyframes feedbackPop { from{transform:scale(0.8)}to{transform:scale(1)} }
+  .quiz-feedback.correct { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .quiz-feedback.wrong { background: rgba(239,68,68,0.1); color: #ef4444; }
+  .quiz-result { text-align: center; padding: 2rem; }
+  .quiz-result .score-big { font-size: 4rem; color: var(--gold); display: block; animation: scorePop 0.6s ease; }
+  @keyframes scorePop { from{transform:scale(0)}to{transform:scale(1)} }
+  .result-stars { font-size: 2rem; margin: 0.5rem 0; }
+  .result-msg { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  /* ===== REKOD ===== */
+  .rekod-controls { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.5rem; }
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; min-width: 600px; }
+  thead { background: linear-gradient(90deg, var(--tq-dark), var(--bg-card2)); }
+  th { padding: 1rem; text-align: left; font-size: 0.9rem; color: var(--gold); white-space: nowrap; }
+  td { padding: 0.9rem 1rem; font-size: 0.9rem; border-bottom: 1px solid rgba(0,180,216,0.1); }
+  tr:hover td { background: rgba(0,180,216,0.05); }
+  .grade-badge {
+    display: inline-block; padding: 0.2rem 0.7rem;
+    border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+  }
+  .grade-A { background: rgba(34,197,94,0.2); color: #22c55e; }
+  .grade-B { background: rgba(0,180,216,0.2); color: var(--tq); }
+  .grade-C { background: rgba(255,215,0,0.2); color: var(--gold); }
+  .grade-D { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .btn-del { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #ef4444; border-radius: 8px; padding: 0.3rem 0.7rem; cursor: pointer; font-family: var(--font); font-size: 0.8rem; transition: var(--transition); }
+  .btn-del:hover { background: #ef4444; color: white; }
+
+  /* ===== PEMULIHAN / PENGAYAAN ===== */
+  .pemulihan-card {
+    background: var(--bg-card); border-radius: var(--radius);
+    border-left: 4px solid var(--red); padding: 1.5rem; margin-bottom: 1.2rem;
+  }
+  .pengayaan-card {
+    background: var(--bg-card); border-radius: var(--radius);
+    border-left: 4px solid #22c55e; padding: 1.5rem; margin-bottom: 1.2rem;
+  }
+  .pemulihan-card h3 { color: var(--red); margin-bottom: 0.8rem; }
+  .pengayaan-card h3 { color: #22c55e; margin-bottom: 0.8rem; }
+
+  /* ===== AI CHATBOX ===== */
+  .chatbox {
+    background: var(--bg-card); border-radius: var(--radius);
+    border: 2px solid rgba(0,180,216,0.2); overflow: hidden;
+    max-width: 700px; margin: 0 auto;
+  }
+  .chat-header {
+    background: linear-gradient(90deg,var(--tq-dark),var(--bg-card2));
+    padding: 1rem 1.5rem; display: flex; align-items: center; gap: 0.8rem;
+  }
+  .chat-avatar { font-size: 2rem; }
+  .chat-header h3 { color: white; font-size: 1rem; }
+  .chat-header p { color: rgba(255,255,255,0.7); font-size: 0.8rem; }
+  .chat-messages {
+    height: 300px; overflow-y: auto; padding: 1rem;
+    display: flex; flex-direction: column; gap: 0.8rem;
+  }
+  .chat-msg {
+    max-width: 85%; padding: 0.8rem 1.1rem; border-radius: 16px;
+    font-size: 0.95rem; line-height: 1.6;
+    animation: msgPop 0.3s ease;
+  }
+  @keyframes msgPop { from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1} }
+  .chat-msg.bot { background: var(--bg-card2); color: var(--text-main); border-radius: 4px 16px 16px 16px; align-self: flex-start; }
+  .chat-msg.user { background: linear-gradient(135deg,var(--tq),var(--tq-dark)); color: white; border-radius: 16px 4px 16px 16px; align-self: flex-end; }
+  .chat-input-row { display: flex; gap: 0.5rem; padding: 1rem; border-top: 1px solid rgba(0,180,216,0.15); }
+  .chat-input {
+    flex: 1; background: var(--bg-card2); border: 2px solid rgba(0,180,216,0.2);
+    color: var(--text-main); border-radius: 12px; padding: 0.7rem 1rem;
+    font-family: var(--font); font-size: 0.95rem; outline: none;
+    transition: var(--transition);
+  }
+  .chat-input:focus { border-color: var(--tq); }
+  .chat-send {
+    background: var(--tq); border: none; border-radius: 12px;
+    padding: 0.7rem 1.2rem; color: white; cursor: pointer;
+    font-size: 1.2rem; transition: var(--transition); flex-shrink: 0;
+  }
+  .chat-send:hover { background: var(--tq-dark); transform: scale(1.05); }
+  .chat-thinking { font-size: 0.85rem; color: var(--text-muted); padding: 0.3rem 1rem; }
+
+  /* ===== BACK TO TOP ===== */
+  #back-to-top {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 500;
+    background: linear-gradient(135deg,var(--tq),var(--tq-dark));
+    color: white; border: none; border-radius: 50%;
+    width: 48px; height: 48px; font-size: 1.3rem;
+    cursor: pointer; transition: var(--transition);
+    box-shadow: var(--shadow);
+    display: none; align-items: center; justify-content: center;
+  }
+  #back-to-top.show { display: flex; }
+  #back-to-top:hover { transform: translateY(-4px) scale(1.1); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--bg-card); border-top: 2px solid rgba(0,180,216,0.2);
+    padding: 2rem 1.5rem; text-align: center; margin-top: 3rem;
+  }
+  footer p { color: var(--text-muted); font-size: 0.85rem; line-height: 2; }
+  footer strong { color: var(--tq); }
+  footer .footer-logo { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+
+  /* ===== UTILITIES ===== */
+  .section-title {
+    font-size: 1.4rem; color: var(--gold);
+    margin: 1.5rem 0 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .section-title::after { content:''; flex:1; height:2px; background:linear-gradient(90deg,rgba(255,215,0,0.3),transparent); }
+  .btn-secondary {
+    background: var(--bg-card2); border: 2px solid rgba(0,180,216,0.3);
+    color: var(--tq); border-radius: 12px; padding: 0.6rem 1.2rem;
+    cursor: pointer; font-family: var(--font); font-size: 0.9rem;
+    transition: var(--transition);
+  }
+  .btn-secondary:hover { border-color: var(--tq); background: rgba(0,180,216,0.1); }
+  .tag { display:inline-block; background:rgba(0,180,216,0.12); border:1px solid var(--tq); color:var(--tq); border-radius:20px; padding:0.2rem 0.7rem; font-size:0.78rem; margin:0.2rem; }
+  .hidden { display: none !important; }
+  .text-center { text-align: center; }
+  .mt-1 { margin-top: 1rem; }
+  .mb-1 { margin-bottom: 1rem; }
+
+  /* Responsive */
+  @media(max-width:600px){
+    .quiz-options { grid-template-columns: 1fr; }
+    .match-container { grid-template-columns: 1fr; }
+    .word-search-grid { grid-template-columns: repeat(8,1fr); }
+    .cards-grid { grid-template-columns: 1fr; }
+    .topbar-title span { display: none; }
+  }
+  @media(max-width:480px){
+    html { font-size: 16px; }
+    .hero-title { font-size: 1.4rem; }
+    .sub-tab { padding: 0.7rem 0.7rem; font-size: 0.78rem; }
+  }
+
+  /* Confetti animation for correct answer */
+  .confetti-piece {
+    position: fixed; width: 10px; height: 10px;
+    top: -10px; border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none; z-index: 9000;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <div class="loader-shapes">
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="loader-ring"></div>
+  <div class="loader-text">🇲🇾 Memuat Website...</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="topbar-left">
+    <span class="topbar-logo" onclick="goHome()">📖</span>
+    <div class="topbar-title">
+      Sejarah Tahun 5
+      <span>🎓 Jom Belajar Interaktif!</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div id="clock-display">🕐 00:00:00</div>
+    <button class="btn-icon" onclick="toggleTheme()" title="Tukar tema">🌓</button>
+    <button class="btn-icon music-btn" onclick="toggleMusic()" id="musicBtn" title="Muzik latar">🔇</button>
+    <button class="btn-icon" onclick="showRekodPage()" title="Rekod Kuiz">📊</button>
+  </div>
+</div>
+
+<!-- ===== HOME PAGE ===== -->
+<div id="page-home" class="page active">
+  <div class="hero-bg">
+    <div class="flag-stripes" id="flagStripes"></div>
+    <div class="hero-blobs">
+      <div class="blob"></div><div class="blob"></div><div class="blob"></div>
+    </div>
+
+    <h1 class="hero-title" style="z-index:2;margin-top:1.5rem">
+      <span class="line1">🌟 SEJARAH TAHUN 5 🌟</span>
+      <span class="line2">Jom Belajar Dengan Interaktif!</span>
+      <span class="line3">📚 Kurikulum Standard Sekolah Rendah (KSSR) • Tahap II</span>
+    </h1>
+
+    <!-- Animated war scene -->
+    <div class="war-scene">
+      <div class="war-sky"></div>
+      <div class="star-burst">✨</div>
+      <div class="star-burst">⭐</div>
+      <div class="star-burst">💫</div>
+      <div class="soldier soldier-1">🪖</div>
+      <div class="soldier soldier-2">💂</div>
+      <div class="soldier soldier-3">🎖️</div>
+      <div class="flag-icon">🇲🇾</div>
+      <div class="war-ground"></div>
+    </div>
+
+    <p class="hero-subtitle">🎯 Pilih topik yang ingin kamu pelajari hari ini!</p>
+
+    <div class="cards-grid">
+      <!-- Card 7 -->
+      <div class="topic-card" onclick="openTopic(7)">
+        <span class="card-icon">⚔️</span>
+        <div class="card-num">Tajuk 7</div>
+        <div class="card-title">Perjuangan Kemerdekaan Negara</div>
+        <div class="card-sk">📌 Standard Kandungan: 7.3 Sejarah Kemerdekaan 1957</div>
+        <div class="card-sp">
+          ✅ Peristiwa ke arah perjuangan kemerdekaan<br>
+          ✅ Tokoh-tokoh pejuang kemerdekaan<br>
+          🌟 EMK: Pengorbanan tokoh pejuang
+        </div>
+        <span class="card-badge">🚀 Mula Belajar!</span>
+      </div>
+      <!-- Card 8 -->
+      <div class="topic-card" onclick="openTopic(8)">
+        <span class="card-icon">👑</span>
+        <div class="card-num">Tajuk 8</div>
+        <div class="card-title">Yang di-Pertuan Agong</div>
+        <div class="card-sk">📌 Standard Kandungan: Institusi Yang di-Pertuan Agong</div>
+        <div class="card-sp">
+          ✅ YdPA sebagai ketua negara Malaysia<br>
+          ✅ Cara pelantikan & bidang kuasa<br>
+          🌟 EMK: Lambang perpaduan negara
+        </div>
+        <span class="card-badge">🚀 Mula Belajar!</span>
+      </div>
+      <!-- Card 9 -->
+      <div class="topic-card" onclick="openTopic(9)">
+        <span class="card-icon">🎵</span>
+        <div class="card-num">Tajuk 9</div>
+        <div class="card-title">Identiti Negara Kita</div>
+        <div class="card-sk">📌 Standard Kandungan: 9.3 Lagu Kebangsaan</div>
+        <div class="card-sp">
+          ✅ Nama & sejarah lagu kebangsaan<br>
+          ✅ Lirik & maksud Negaraku<br>
+          🌟 EMK: Jati diri melalui lagu kebangsaan
+        </div>
+        <span class="card-badge">🚀 Mula Belajar!</span>
+      </div>
+    </div>
+
+    <!-- Rekod button -->
+    <div style="margin-top:2rem;z-index:2">
+      <button class="btn-main btn-gold" onclick="showRekodPage()" style="font-size:1rem">
+        📊 Lihat Rekod Kuiz Semua Topik
+      </button>
+    </div>
+  </div>
+
+  <!-- AI CHATBOX on home -->
+  <div style="padding:1.5rem;max-width:700px;margin:0 auto">
+    <h2 class="section-title">🤖 Tanya Cikgu AI</h2>
+    <div class="chatbox">
+      <div class="chat-header">
+        <div class="chat-avatar">🤖</div>
+        <div>
+          <h3>Cikgu AI Sejarah</h3>
+          <p>Tanya soalan mudah tentang Sejarah Tahun 5!</p>
+        </div>
+      </div>
+      <div class="chat-messages" id="homeChat">
+        <div class="chat-msg bot">Hai! Saya Cikgu AI! 😊 Boleh tanya saya soalan tentang Sejarah Tahun 5. Untuk soalan yang susah, sila rujuk <strong>Cikgu Haiqal</strong> ya! 🧑‍🏫</div>
+      </div>
+      <div class="chat-thinking hidden" id="homeChatThinking">✍️ Cikgu AI sedang berfikir...</div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="homeChatInput" placeholder="Taip soalan kamu di sini..." onkeypress="if(event.key==='Enter')sendChat('home')">
+        <button class="chat-send" onclick="sendChat('home')">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-logo">🇲🇾</span>
+    <p><strong>Website Pembelajaran Sejarah Tahun 5</strong></p>
+    <p>Dibangunkan untuk PdP Interaktif Sekolah Rendah</p>
+    <p><strong>Hak Cipta © Mohd. Nur Haiqal Bin Rahman</strong></p>
+    <p>EDUP2112 TEKNOLOGI DAN MEDIA PENGAJARAN</p>
+  </footer>
+</div>
+
+<!-- ===== TOPIC 7 PAGE ===== -->
+<div id="topic-7" class="topic-page">
+  <div class="topic-header">
+    <div class="topic-header-icon">⚔️</div>
+    <div class="topic-header-info">
+      <h2>Tajuk 7: Perjuangan Kemerdekaan Negara</h2>
+      <p>📌 7.3 Sejarah Kemerdekaan 1957 | Tahun 5 KSSR</p>
+    </div>
+    <button class="btn-secondary" onclick="goHome()" style="margin-left:auto">🏠 Kembali</button>
+  </div>
+  <div class="sub-nav" id="nav7">
+    <button class="sub-tab active" onclick="showSubPanel(7,'utama')">🏠 Utama</button>
+    <button class="sub-tab" onclick="showSubPanel(7,'sk')">📌 Standard</button>
+    <button class="sub-tab" onclick="showSubPanel(7,'nota')">📚 Nota</button>
+    <button class="sub-tab" onclick="showSubPanel(7,'flashcard')">🃏 Flashcard</button>
+    <button class="sub-tab" onclick="showSubPanel(7,'aktiviti')">🎮 Aktiviti</button>
+    <button class="sub-tab" onclick="showSubPanel(7,'kuiz')">✏️ Kuiz</button>
+    <button class="sub-tab" onclick="showSubPanel(7,'pemulihan')">💡 Pemulihan</button>
+    <button class="sub-tab" onclick="showSubPanel(7,'pengayaan')">🌟 Pengayaan</button>
+  </div>
+  <!-- PANELS T7 -->
+  <div id="t7-utama" class="sub-panel active">
+    <div class="info-card">
+      <h3>⚔️ Apa yang akan kamu belajar?</h3>
+      <p>Dalam tajuk ini, kamu akan belajar tentang peristiwa-peristiwa penting yang membawa kepada kemerdekaan Malaysia pada <strong>31 Ogos 1957</strong>! 🇲🇾</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem">
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(7,'nota')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">📖</div>
+        <div style="color:var(--gold);font-weight:700">Nota Interaktif</div>
+        <div style="color:var(--text-muted);font-size:0.85rem">Baca & Faham</div>
+      </div>
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(7,'aktiviti')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">🎮</div>
+        <div style="color:var(--gold);font-weight:700">Aktiviti Seronok</div>
+        <div style="color:var(--text-muted);font-size:0.85rem">Main & Belajar</div>
+      </div>
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(7,'kuiz')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">✏️</div>
+        <div style="color:var(--gold);font-weight:700">Kuiz Digital</div>
+        <div style="color:var(--text-muted);font-size:0.85rem">15 Soalan • 20 minit</div>
+      </div>
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(7,'flashcard')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">🃏</div>
+        <div style="color:var(--gold);font-weight:700">Flashcard</div>
+        <div style="color:var(--text-muted);font-size:0.85rem">Ulang Kaji Cepat</div>
+      </div>
+    </div>
+  </div>
+  <div id="t7-sk" class="sub-panel">
+    <h2 class="section-title">📌 Standard Kandungan & Pembelajaran</h2>
+    <div class="info-card">
+      <h3>📌 Standard Kandungan</h3>
+      <span class="badge-sk">7.3</span>
+      <p>Sejarah Kemerdekaan 1957</p>
+    </div>
+    <div class="info-card">
+      <h3>📖 Standard Pembelajaran</h3>
+      <ul>
+        <li>✅ <strong>7.3.1</strong> Menyatakan peristiwa ke arah perjuangan kemerdekaan</li>
+        <li>✅ <strong>7.3.2</strong> Menamakan tokoh-tokoh yang berjuang ke arah kemerdekaan</li>
+        <li>✅ <strong>7.3.3</strong> Menyatakan rundingan bagi mendapatkan kemerdekaan</li>
+        <li>✅ <strong>7.3.4</strong> Menyatakan detik-detik pengisytiharan kemerdekaan</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>🌟 Elemen Merentas Kurikulum (EMK)</h3>
+      <ul>
+        <li>🌟 <strong>K7.3.5</strong> Menyatakan pengorbanan tokoh-tokoh pejuang kemerdekaan yang boleh dicontohi</li>
+        <li>🌟 <strong>K7.3.6</strong> Kepentingan permuafakatan dalam perjuangan kemerdekaan</li>
+        <li>🌟 <strong>K7.3.7</strong> Kepentingan mempertahankan kedaulatan negara</li>
+      </ul>
+    </div>
+  </div>
+  <div id="t7-nota" class="sub-panel">
+    <h2 class="section-title">📚 Nota Interaktif – Kemerdekaan 1957</h2>
+    <div class="nota-section">
+      <h3>⏰ Garis Masa Perjuangan Kemerdekaan</h3>
+      <div class="nota-visual">
+        <div class="timeline-item">
+          <div class="timeline-dot">1946</div>
+          <div class="timeline-content">
+            <h4>🔴 Penubuhan UMNO (1946)</h4>
+            <p>Orang Melayu bangkit menentang Malayan Union yang dianggap mengancam kedaulatan raja-raja Melayu. UMNO ditubuhkan oleh <strong>Dato' Onn Jaafar</strong> untuk menyatukan orang Melayu.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">1948</div>
+          <div class="timeline-content">
+            <h4>🤝 Persekutuan Tanah Melayu (1948)</h4>
+            <p>Persekutuan Tanah Melayu ditubuhkan menggantikan Malayan Union. Kedudukan Raja-Raja Melayu dipulihkan semula.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">1951</div>
+          <div class="timeline-content">
+            <h4>🤝 Parti Perikatan (1951)</h4>
+            <p>UMNO, MCA dan MIC bergabung membentuk Parti Perikatan di bawah pimpinan <strong>Tunku Abdul Rahman</strong>. Perpaduan kaum menjadi kekuatan utama!</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">1955</div>
+          <div class="timeline-content">
+            <h4>🗳️ Pilihan Raya Umum Pertama (1955)</h4>
+            <p>Parti Perikatan menang besar – 51 daripada 52 kerusi! Tunku Abdul Rahman dilantik sebagai Ketua Menteri.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">1956</div>
+          <div class="timeline-content">
+            <h4>✈️ Rundingan London (1956)</h4>
+            <p>Tunku Abdul Rahman memimpin rombongan ke London untuk berunding kemerdekaan dengan kerajaan British. Kemerdekaan dipersetujui!</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:linear-gradient(135deg,var(--gold),var(--gold-dark))">1957</div>
+          <div class="timeline-content">
+            <h4>🎉 MERDEKA! 31 Ogos 1957</h4>
+            <p>Pada <strong>tengah malam 31 Ogos 1957</strong>, Tunku Abdul Rahman melaungkan <strong>"Merdeka! Merdeka! Merdeka!"</strong> sebanyak 7 kali di Stadium Merdeka, Kuala Lumpur. 🇲🇾</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>🦸 Tokoh-tokoh Pejuang Kemerdekaan</h3>
+      <div class="hero-card">
+        <div class="hero-emoji">👨‍💼</div>
+        <div class="hero-info">
+          <h4>Tunku Abdul Rahman Putra Al-Haj</h4>
+          <p>🌟 "Bapa Malaysia" • Perdana Menteri pertama Malaysia • Ketua rundingan kemerdekaan di London 1956</p>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-emoji">🧑‍💼</div>
+        <div class="hero-info">
+          <h4>Dato' Abdul Razak Hussein</h4>
+          <p>🌟 Timbalan Perdana Menteri pertama Malaysia • Pejuang kemerdekaan yang gigih</p>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-emoji">👨‍⚖️</div>
+        <div class="hero-info">
+          <h4>Dato' Onn Jaafar</h4>
+          <p>🌟 Pengasas UMNO • Memimpin penentangan terhadap Malayan Union pada tahun 1946</p>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-emoji">🧑‍🤝‍🧑</div>
+        <div class="hero-info">
+          <h4>Tan Cheng Lock & Sambanthan</h4>
+          <p>🌟 Pemimpin MCA & MIC • Mewakili kaum Cina dan India dalam perjuangan kemerdekaan bersama UMNO</p>
+        </div>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>🌟 Pengorbanan Tokoh Pejuang</h3>
+      <div class="nota-visual">
+        <p style="font-size:1.05rem;color:var(--text-main);line-height:2">
+          Para tokoh pejuang kemerdekaan telah banyak berkorban untuk negara:<br>
+          ⭐ <strong>Masa & tenaga</strong> – mereka berjuang siang dan malam tanpa jemu<br>
+          ⭐ <strong>Keluarga</strong> – berpisah dengan keluarga demi negara<br>
+          ⭐ <strong>Nyawa</strong> – ada yang ditangkap dan dipenjarakan oleh British<br>
+          ⭐ <strong>Harta benda</strong> – mengorbankan kekayaan peribadi untuk perjuangan<br><br>
+          💡 <em>Kita patut mencontohi semangat perjuangan mereka dalam kehidupan seharian!</em>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="t7-flashcard" class="sub-panel">
+    <h2 class="section-title">🃏 Flashcard – Tajuk 7</h2>
+    <p style="color:var(--text-muted);margin-bottom:1rem">👆 Klik kad untuk lihat jawapan!</p>
+    <div class="flashcard-grid">
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">📅</div>
+        <div class="flashcard-term">Tarikh Kemerdekaan</div>
+        <div class="flashcard-def">31 Ogos 1957 – Malaysia merdeka daripada British! 🇲🇾</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">👨‍💼</div>
+        <div class="flashcard-term">Bapa Malaysia</div>
+        <div class="flashcard-def">Tunku Abdul Rahman Putra Al-Haj – Perdana Menteri pertama Malaysia</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🏟️</div>
+        <div class="flashcard-term">Stadium Merdeka</div>
+        <div class="flashcard-def">Tempat pengisytiharan kemerdekaan – Tunku melaungkan "Merdeka!" 7 kali!</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🤝</div>
+        <div class="flashcard-term">Parti Perikatan</div>
+        <div class="flashcard-def">Gabungan UMNO + MCA + MIC – berjuang bersama untuk kemerdekaan!</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🏛️</div>
+        <div class="flashcard-term">UMNO</div>
+        <div class="flashcard-def">United Malays National Organisation – ditubuhkan 1946 oleh Dato' Onn Jaafar</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🚫</div>
+        <div class="flashcard-term">Malayan Union</div>
+        <div class="flashcard-def">Rancangan British 1946 – ditentang kerana mengancam kedaulatan raja-raja Melayu</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">✈️</div>
+        <div class="flashcard-term">Rundingan London</div>
+        <div class="flashcard-def">1956 – Tunku ke London untuk berunding kemerdekaan dengan British</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🗳️</div>
+        <div class="flashcard-term">Pilihan Raya 1955</div>
+        <div class="flashcard-def">Perikatan menang 51/52 kerusi – menunjukkan sokongan rakyat untuk merdeka!</div>
+      </div>
+    </div>
+  </div>
+  <div id="t7-aktiviti" class="sub-panel">
+    <h2 class="section-title">🎮 Aktiviti Interaktif – Tajuk 7</h2>
+    <!-- Match activity -->
+    <div class="activity-card">
+      <h3>🎯 Padankan Tokoh!</h3>
+      <p style="color:var(--text-muted);margin-bottom:1rem;font-size:0.9rem">Padankan nama tokoh dengan peranan mereka. Klik satu di kiri, kemudian satu di kanan!</p>
+      <div class="match-container" id="matchGame7">
+        <div class="match-col" id="matchLeft7">
+          <div class="match-item" data-id="1" onclick="selectMatch(7,this,'left')">Tunku Abdul Rahman</div>
+          <div class="match-item" data-id="2" onclick="selectMatch(7,this,'left')">Dato' Onn Jaafar</div>
+          <div class="match-item" data-id="3" onclick="selectMatch(7,this,'left')">Tan Cheng Lock</div>
+          <div class="match-item" data-id="4" onclick="selectMatch(7,this,'left')">V.T. Sambanthan</div>
+        </div>
+        <div class="match-col" id="matchRight7">
+          <div class="match-item" data-id="3" onclick="selectMatch(7,this,'right')">Pemimpin MCA (Cina)</div>
+          <div class="match-item" data-id="1" onclick="selectMatch(7,this,'right')">Bapa Malaysia</div>
+          <div class="match-item" data-id="4" onclick="selectMatch(7,this,'right')">Pemimpin MIC (India)</div>
+          <div class="match-item" data-id="2" onclick="selectMatch(7,this,'right')">Pengasas UMNO</div>
+        </div>
+      </div>
+      <div id="matchResult7" style="margin-top:1rem;font-weight:700;color:var(--gold)"></div>
+    </div>
+    <!-- Fill blanks -->
+    <div class="activity-card">
+      <h3>✏️ Isi Tempat Kosong!</h3>
+      <div id="fillBlank7">
+        <div class="fill-blank-q">
+          Malaysia merdeka pada <input type="text" class="fb-input" data-ans="31 ogos 1957" placeholder="___"> daripada British.
+        </div>
+        <div class="fill-blank-q">
+          Tunku Abdul Rahman melaungkan "Merdeka" sebanyak <input type="text" class="fb-input" data-ans="7" placeholder="___"> kali.
+        </div>
+        <div class="fill-blank-q">
+          Parti <input type="text" class="fb-input" data-ans="perikatan" placeholder="___"> terdiri daripada UMNO, MCA dan MIC.
+        </div>
+        <div class="fill-blank-q">
+          UMNO diasaskan oleh Dato' <input type="text" class="fb-input" data-ans="onn jaafar" placeholder="___"> pada tahun 1946.
+        </div>
+      </div>
+      <button class="btn-main mt-1" onclick="checkFillBlank(7)" style="font-size:0.95rem">✅ Semak Jawapan</button>
+      <div id="fbResult7" style="margin-top:0.8rem;font-weight:700"></div>
+    </div>
+    <!-- Word search -->
+    <div class="activity-card">
+      <h3>🔍 Cari Perkataan!</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.8rem">Cari perkataan: MERDEKA, TUNKU, UMNO, PERIKATAN, LONDON</p>
+      <div class="word-search-grid" id="ws7"></div>
+      <div id="wsScore7" style="margin-top:0.8rem;color:var(--gold);font-weight:700"></div>
+    </div>
+  </div>
+  <div id="t7-kuiz" class="sub-panel">
+    <div id="t7-kuiz-start" class="quiz-start">
+      <div style="font-size:3rem;margin-bottom:1rem">✏️</div>
+      <h2>Kuiz Tajuk 7</h2>
+      <p>15 soalan • Masa: 20 minit • Auto semak jawapan</p>
+      <input class="input-field" id="t7-name" placeholder="Nama kamu...">
+      <input class="input-field" id="t7-class" placeholder="Kelas kamu...">
+      <button class="btn-main mt-1" onclick="startQuiz(7)">🚀 Mulakan Kuiz!</button>
+    </div>
+    <div id="t7-kuiz-main" class="hidden">
+      <div style="padding:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem">
+          <span style="color:var(--tq);font-weight:700" id="t7-qtimer">⏱️ 20:00</span>
+          <span class="quiz-progress" id="t7-qprog">Soalan 1/15</span>
+        </div>
+        <div class="quiz-timer-bar"><div class="quiz-timer-fill" id="t7-tbar"></div></div>
+        <div class="quiz-question-text" id="t7-qtext"></div>
+        <div class="quiz-options" id="t7-qopts"></div>
+        <div id="t7-qfeedback"></div>
+        <button class="btn-main mt-1 hidden" id="t7-qnext" onclick="nextQuestion(7)">Seterusnya ▶</button>
+      </div>
+    </div>
+    <div id="t7-kuiz-result" class="quiz-result hidden">
+      <div style="font-size:3rem">🏆</div>
+      <span class="score-big" id="t7-score-display"></span>
+      <div class="result-stars" id="t7-stars"></div>
+      <div class="result-msg" id="t7-result-msg"></div>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn-main" onclick="retryQuiz(7)">🔄 Cuba Lagi</button>
+        <button class="btn-main btn-gold" onclick="showRekodPage()">📊 Lihat Rekod</button>
+        <button class="btn-secondary" onclick="goHome()">🏠 Halaman Utama</button>
+      </div>
+    </div>
+  </div>
+  <div id="t7-pemulihan" class="sub-panel">
+    <h2 class="section-title">💡 Pemulihan – Tajuk 7</h2>
+    <p style="color:var(--text-muted);margin-bottom:1rem">Untuk murid yang masih belum faham. Baca balik nota perlahan-lahan! 😊</p>
+    <div class="pemulihan-card">
+      <h3>🔑 Fakta Penting yang Perlu Ingat</h3>
+      <ul style="line-height:2.2;font-size:1rem">
+        <li>🇲🇾 Malaysia merdeka pada <strong>31 Ogos 1957</strong></li>
+        <li>👨‍💼 Bapa Malaysia = <strong>Tunku Abdul Rahman</strong></li>
+        <li>🏟️ Kemerdekaan diisytiharkan di <strong>Stadium Merdeka, KL</strong></li>
+        <li>🤝 Parti Perikatan = <strong>UMNO + MCA + MIC</strong></li>
+        <li>🏛️ UMNO ditubuhkan pada <strong>1946</strong></li>
+        <li>✈️ Rundingan kemerdekaan di <strong>London</strong> pada 1956</li>
+      </ul>
+    </div>
+    <div class="pemulihan-card">
+      <h3>❓ Soalan Mudah untuk Latihan</h3>
+      <p>1. Siapakah Bapa Malaysia? <strong style="color:var(--tq)">[Tunku Abdul Rahman]</strong></p>
+      <p>2. Bilakah Malaysia merdeka? <strong style="color:var(--tq)">[31 Ogos 1957]</strong></p>
+      <p>3. UMNO ditubuhkan pada tahun berapa? <strong style="color:var(--tq)">[1946]</strong></p>
+    </div>
+  </div>
+  <div id="t7-pengayaan" class="sub-panel">
+    <h2 class="section-title">🌟 Pengayaan – Tajuk 7</h2>
+    <p style="color:var(--text-muted);margin-bottom:1rem">Untuk murid yang cemerlang! Ketahui lebih lanjut! 🌟</p>
+    <div class="pengayaan-card">
+      <h3>🌟 Fakta Menarik!</h3>
+      <ul style="line-height:2;font-size:1rem">
+        <li>💡 Tunku Abdul Rahman mendapat pendidikan di Oxford, England</li>
+        <li>💡 Pilihan raya 1955 adalah pilihan raya pertama di Tanah Melayu</li>
+        <li>💡 Persekutuan Tanah Melayu 1948 memberi lebih kuasa kepada raja-raja Melayu</li>
+        <li>💡 Malaysia Hari Merdeka disambut setiap 31 Ogos dengan perarakan dan pertunjukan bunga api</li>
+        <li>💡 "Merdeka" bermaksud "bebas" atau "berdaulat"</li>
+      </ul>
+    </div>
+    <div class="pengayaan-card">
+      <h3>🧠 Cabaran Berfikir!</h3>
+      <p style="font-size:1rem;line-height:1.8;color:var(--text-main)">Bayangkan kamu adalah Tunku Abdul Rahman pada tahun 1957. <strong>Apakah perasaan kamu</strong> ketika melaungkan "Merdeka!" di Stadium Merdeka? Tulis atau ceritakan kepada kawan-kawan kamu! ✍️</p>
+    </div>
+  </div>
+  <footer>
+    <p><strong>Website Pembelajaran Sejarah Tahun 5</strong> | <strong>Hak Cipta © Mohd. Nur Haiqal Bin Rahman</strong></p>
+    <p>EDUP2112 TEKNOLOGI DAN MEDIA PENGAJARAN</p>
+  </footer>
+</div>
+
+<!-- ===== TOPIC 8 PAGE ===== -->
+<div id="topic-8" class="topic-page">
+  <div class="topic-header">
+    <div class="topic-header-icon">👑</div>
+    <div class="topic-header-info">
+      <h2>Tajuk 8: Yang di-Pertuan Agong</h2>
+      <p>📌 Institusi Ketua Negara Malaysia | Tahun 5 KSSR</p>
+    </div>
+    <button class="btn-secondary" onclick="goHome()" style="margin-left:auto">🏠 Kembali</button>
+  </div>
+  <div class="sub-nav" id="nav8">
+    <button class="sub-tab active" onclick="showSubPanel(8,'utama')">🏠 Utama</button>
+    <button class="sub-tab" onclick="showSubPanel(8,'sk')">📌 Standard</button>
+    <button class="sub-tab" onclick="showSubPanel(8,'nota')">📚 Nota</button>
+    <button class="sub-tab" onclick="showSubPanel(8,'flashcard')">🃏 Flashcard</button>
+    <button class="sub-tab" onclick="showSubPanel(8,'aktiviti')">🎮 Aktiviti</button>
+    <button class="sub-tab" onclick="showSubPanel(8,'kuiz')">✏️ Kuiz</button>
+    <button class="sub-tab" onclick="showSubPanel(8,'pemulihan')">💡 Pemulihan</button>
+    <button class="sub-tab" onclick="showSubPanel(8,'pengayaan')">🌟 Pengayaan</button>
+  </div>
+  <div id="t8-utama" class="sub-panel active">
+    <div class="info-card">
+      <h3>👑 Apa yang akan kamu belajar?</h3>
+      <p>Kamu akan belajar tentang <strong>Yang di-Pertuan Agong</strong> – ketua negara Malaysia yang paling mulia dan dihormati oleh seluruh rakyat! 🇲🇾</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem">
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(8,'nota')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">📖</div>
+        <div style="color:var(--gold);font-weight:700">Nota Interaktif</div>
+      </div>
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(8,'aktiviti')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">🎮</div>
+        <div style="color:var(--gold);font-weight:700">Aktiviti Seronok</div>
+      </div>
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(8,'kuiz')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">✏️</div>
+        <div style="color:var(--gold);font-weight:700">Kuiz Digital</div>
+      </div>
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(8,'flashcard')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">🃏</div>
+        <div style="color:var(--gold);font-weight:700">Flashcard</div>
+      </div>
+    </div>
+  </div>
+  <div id="t8-sk" class="sub-panel">
+    <h2 class="section-title">📌 Standard Kandungan & Pembelajaran</h2>
+    <div class="info-card">
+      <h3>📌 Standard Kandungan</h3>
+      <span class="badge-sk">8.1</span>
+      <p>Institusi Yang di-Pertuan Agong</p>
+    </div>
+    <div class="info-card">
+      <h3>📖 Standard Pembelajaran</h3>
+      <ul>
+        <li>✅ <strong>8.1.1</strong> Menyatakan YdPA sebagai institusi ketua negara Malaysia</li>
+        <li>✅ <strong>8.1.2</strong> Menyatakan cara pelantikan Yang di-Pertuan Agong</li>
+        <li>✅ <strong>8.1.3</strong> Menyenaraikan bidang kuasa Yang di-Pertuan Agong</li>
+        <li>✅ <strong>8.1.4</strong> Menyatakan alat-alat kebesaran YdPA dan Permaisuri Agong</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>🌟 Elemen Merentas Kurikulum (EMK)</h3>
+      <ul>
+        <li>🌟 <strong>K8.1.5</strong> Kepentingan menghargai YdPA sebagai lambang perpaduan</li>
+        <li>🌟 <strong>K8.1.6</strong> Keunikan institusi YdPA dalam sistem pemerintahan Malaysia</li>
+        <li>🌟 <strong>K8.1.7</strong> Kepentingan menghormati pemimpin negara</li>
+      </ul>
+    </div>
+  </div>
+  <div id="t8-nota" class="sub-panel">
+    <h2 class="section-title">📚 Nota Interaktif – Yang di-Pertuan Agong</h2>
+    <div class="nota-section">
+      <h3>👑 Apa itu Yang di-Pertuan Agong?</h3>
+      <div class="nota-visual">
+        <p style="font-size:1.05rem;color:var(--text-main);line-height:2">
+          Yang di-Pertuan Agong (YdPA) ialah <strong>ketua negara Malaysia</strong> yang paling tinggi. Baginda adalah:<br>
+          👑 Ketua Negara Malaysia<br>
+          ⚖️ Ketua Agama Islam bagi negeri-negeri yang tiada raja<br>
+          🎖️ Panglima Tertinggi Angkatan Tentera Malaysia<br>
+          📜 Bertindak mengikut <strong>Raja Berperlembagaan</strong>
+        </p>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>🗓️ Cara Pelantikan YdPA</h3>
+      <div class="nota-visual">
+        <div class="timeline-item">
+          <div class="timeline-dot">1️⃣</div>
+          <div class="timeline-content">
+            <h4>Majlis Raja-Raja Melayu</h4>
+            <p>Terdapat <strong>9 Raja Melayu</strong> yang layak dipilih: Sultan Perak, Selangor, Pahang, Johor, Kedah, Kelantan, Terengganu, Perlis (Raja) dan Negeri Sembilan (Yang Dipertua Besar).</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">2️⃣</div>
+          <div class="timeline-content">
+            <h4>Sistem Giliran (Rotation)</h4>
+            <p>YdPA dipilih mengikut sistem giliran. Setiap raja berpeluang menjadi YdPA secara bergilir-gilir.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">3️⃣</div>
+          <div class="timeline-content">
+            <h4>Tempoh Pemerintahan</h4>
+            <p>YdPA memerintah selama <strong>5 tahun</strong> atau sehingga baginda mangkat atau meletakkan jawatan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>📜 Bidang Kuasa YdPA</h3>
+      <div class="nota-visual">
+        <p style="font-size:1rem;line-height:2.2;color:var(--text-main)">
+          ⚖️ Melantik Perdana Menteri<br>
+          📋 Meluluskan Parlimen dan rang undang-undang<br>
+          🏅 Menganugerahkan darjah kebesaran dan bintang kehormatan<br>
+          🎖️ Panglima Tentera Malaysia<br>
+          🕌 Ketua Agama Islam bagi beberapa negeri<br>
+          🔐 Mengisytiharkan darurat negara jika perlu
+        </p>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>👑 Alat-alat Kebesaran YdPA</h3>
+      <div class="flashcard-grid">
+        <div class="info-card" style="text-align:center">
+          <div style="font-size:2rem">⚔️</div>
+          <div style="color:var(--tq);font-weight:700">Nobat</div>
+          <div style="color:var(--text-muted);font-size:0.85rem">Alat muzik diraja untuk upacara rasmi</div>
+        </div>
+        <div class="info-card" style="text-align:center">
+          <div style="font-size:2rem">🔰</div>
+          <div style="color:var(--tq);font-weight:700">Cogan Diraja</div>
+          <div style="color:var(--text-muted);font-size:0.85rem">Lambang kuasa kerajaan</div>
+        </div>
+        <div class="info-card" style="text-align:center">
+          <div style="font-size:2rem">👑</div>
+          <div style="color:var(--tq);font-weight:700">Mahkota</div>
+          <div style="color:var(--text-muted);font-size:0.85rem">Dipakai semasa istiadat pertabalan</div>
+        </div>
+        <div class="info-card" style="text-align:center">
+          <div style="font-size:2rem">🏠</div>
+          <div style="color:var(--tq);font-weight:700">Istana Negara</div>
+          <div style="color:var(--text-muted);font-size:0.85rem">Tempat tinggal rasmi YdPA</div>
+        </div>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>🌟 Kepentingan Menghargai YdPA</h3>
+      <div class="nota-visual">
+        <p style="font-size:1rem;line-height:2.2;color:var(--text-main)">
+          🤝 YdPA adalah <strong>lambang perpaduan</strong> seluruh rakyat Malaysia<br>
+          🏛️ Menjamin kestabilan sistem pemerintahan negara<br>
+          🌈 Menyatukan semua kaum tanpa mengira agama dan bangsa<br>
+          💙 Kita wajib <strong>menghormati dan mentaati</strong> YdPA sebagai ketua negara<br>
+          📜 Ini adalah prinsip dalam <strong>Rukun Negara</strong>: Kesetiaan kepada Raja dan Negara
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="t8-flashcard" class="sub-panel">
+    <h2 class="section-title">🃏 Flashcard – Tajuk 8</h2>
+    <p style="color:var(--text-muted);margin-bottom:1rem">👆 Klik kad untuk lihat jawapan!</p>
+    <div class="flashcard-grid">
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">👑</div>
+        <div class="flashcard-term">YdPA</div>
+        <div class="flashcard-def">Yang di-Pertuan Agong – Ketua Negara Malaysia yang tertinggi</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🔢</div>
+        <div class="flashcard-term">Bilangan Raja Melayu</div>
+        <div class="flashcard-def">9 Raja Melayu boleh menjadi YdPA secara bergilir-gilir</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">📅</div>
+        <div class="flashcard-term">Tempoh Pemerintahan</div>
+        <div class="flashcard-def">5 tahun sekali giliran – sistem unik Malaysia!</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🏠</div>
+        <div class="flashcard-term">Istana Negara</div>
+        <div class="flashcard-def">Tempat tinggal rasmi Yang di-Pertuan Agong di Kuala Lumpur</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🎖️</div>
+        <div class="flashcard-term">Panglima Tentera</div>
+        <div class="flashcard-def">YdPA adalah Panglima Tertinggi Angkatan Tentera Malaysia</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">📜</div>
+        <div class="flashcard-term">Raja Berperlembagaan</div>
+        <div class="flashcard-def">YdPA bertindak mengikut Perlembagaan Persekutuan Malaysia</div>
+      </div>
+    </div>
+  </div>
+  <div id="t8-aktiviti" class="sub-panel">
+    <h2 class="section-title">🎮 Aktiviti Interaktif – Tajuk 8</h2>
+    <!-- Drag and Drop -->
+    <div class="activity-card">
+      <h3>🎯 Seret & Letak – Tugas YdPA!</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem">Seret jawapan ke kotak yang betul!</p>
+      <div class="drag-source" id="dragSource8">
+        <div class="drag-item" draggable="true" data-val="Melantik PM">Melantik PM</div>
+        <div class="drag-item" draggable="true" data-val="Ketua Tentera">Ketua Tentera</div>
+        <div class="drag-item" draggable="true" data-val="5 Tahun">5 Tahun</div>
+        <div class="drag-item" draggable="true" data-val="9 Raja">9 Raja</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-top:0.8rem">
+        <div>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.3rem">Bidang kuasa YdPA:</p>
+          <div class="drag-target" data-expect="Melantik PM" ondragover="event.preventDefault()" ondrop="dropItem(this,event)">Letak di sini...</div>
+          <div class="drag-target" data-expect="Ketua Tentera" ondragover="event.preventDefault()" ondrop="dropItem(this,event)" style="margin-top:0.5rem">Letak di sini...</div>
+        </div>
+        <div>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.3rem">Maklumat pelantikan:</p>
+          <div class="drag-target" data-expect="5 Tahun" ondragover="event.preventDefault()" ondrop="dropItem(this,event)">Letak di sini...</div>
+          <div class="drag-target" data-expect="9 Raja" ondragover="event.preventDefault()" ondrop="dropItem(this,event)" style="margin-top:0.5rem">Letak di sini...</div>
+        </div>
+      </div>
+      <button class="btn-main mt-1" onclick="checkDrag(8)" style="font-size:0.9rem">✅ Semak!</button>
+      <div id="dragResult8" style="margin-top:0.8rem;font-weight:700"></div>
+    </div>
+    <!-- Multiple choice with images (text-based) -->
+    <div class="activity-card">
+      <h3>🖼️ Pilihan Bergambar – Alat Kebesaran!</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem">Pilih jawapan yang betul!</p>
+      <div id="imgQuiz8">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--text-main);margin-bottom:1rem">Apakah alat muzik diraja yang digunakan semasa upacara pertabalan YdPA?</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
+          <div class="quiz-opt" onclick="checkImgQ8(this,false)"><span style="font-size:1.5rem">🥁</span><br>Gendang</div>
+          <div class="quiz-opt" onclick="checkImgQ8(this,true)"><span style="font-size:1.5rem">🎺</span><br>Nobat</div>
+          <div class="quiz-opt" onclick="checkImgQ8(this,false)"><span style="font-size:1.5rem">🎻</span><br>Biola</div>
+          <div class="quiz-opt" onclick="checkImgQ8(this,false)"><span style="font-size:1.5rem">🪗</span><br>Akordion</div>
+        </div>
+        <div id="imgQ8Result" style="margin-top:0.8rem;font-weight:700"></div>
+      </div>
+    </div>
+    <!-- Word search T8 -->
+    <div class="activity-card">
+      <h3>🔍 Cari Perkataan!</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.8rem">Cari: AGONG, RAJA, NOBAT, MAHKOTA, ISTANA</p>
+      <div class="word-search-grid" id="ws8"></div>
+    </div>
+  </div>
+  <div id="t8-kuiz" class="sub-panel">
+    <div id="t8-kuiz-start" class="quiz-start">
+      <div style="font-size:3rem;margin-bottom:1rem">👑</div>
+      <h2>Kuiz Tajuk 8</h2>
+      <p>15 soalan • Masa: 20 minit • Auto semak jawapan</p>
+      <input class="input-field" id="t8-name" placeholder="Nama kamu...">
+      <input class="input-field" id="t8-class" placeholder="Kelas kamu...">
+      <button class="btn-main mt-1" onclick="startQuiz(8)">🚀 Mulakan Kuiz!</button>
+    </div>
+    <div id="t8-kuiz-main" class="hidden">
+      <div style="padding:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem">
+          <span style="color:var(--tq);font-weight:700" id="t8-qtimer">⏱️ 20:00</span>
+          <span class="quiz-progress" id="t8-qprog">Soalan 1/15</span>
+        </div>
+        <div class="quiz-timer-bar"><div class="quiz-timer-fill" id="t8-tbar"></div></div>
+        <div class="quiz-question-text" id="t8-qtext"></div>
+        <div class="quiz-options" id="t8-qopts"></div>
+        <div id="t8-qfeedback"></div>
+        <button class="btn-main mt-1 hidden" id="t8-qnext" onclick="nextQuestion(8)">Seterusnya ▶</button>
+      </div>
+    </div>
+    <div id="t8-kuiz-result" class="quiz-result hidden">
+      <div style="font-size:3rem">🏆</div>
+      <span class="score-big" id="t8-score-display"></span>
+      <div class="result-stars" id="t8-stars"></div>
+      <div class="result-msg" id="t8-result-msg"></div>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn-main" onclick="retryQuiz(8)">🔄 Cuba Lagi</button>
+        <button class="btn-main btn-gold" onclick="showRekodPage()">📊 Lihat Rekod</button>
+        <button class="btn-secondary" onclick="goHome()">🏠 Halaman Utama</button>
+      </div>
+    </div>
+  </div>
+  <div id="t8-pemulihan" class="sub-panel">
+    <h2 class="section-title">💡 Pemulihan – Tajuk 8</h2>
+    <div class="pemulihan-card">
+      <h3>🔑 Fakta Penting</h3>
+      <ul style="line-height:2.2;font-size:1rem">
+        <li>👑 YdPA = <strong>Yang di-Pertuan Agong</strong> = Ketua Negara</li>
+        <li>🔢 Ada <strong>9 Raja Melayu</strong> yang boleh menjadi YdPA</li>
+        <li>📅 Tempoh pemerintahan = <strong>5 tahun</strong></li>
+        <li>🏠 Tinggal di <strong>Istana Negara</strong></li>
+        <li>🎺 Alat muzik diraja = <strong>Nobat</strong></li>
+        <li>🤝 YdPA adalah <strong>lambang perpaduan</strong> rakyat Malaysia</li>
+      </ul>
+    </div>
+  </div>
+  <div id="t8-pengayaan" class="sub-panel">
+    <h2 class="section-title">🌟 Pengayaan – Tajuk 8</h2>
+    <div class="pengayaan-card">
+      <h3>🌟 Fakta Menarik tentang YdPA!</h3>
+      <ul style="line-height:2;font-size:1rem">
+        <li>💡 Malaysia adalah satu-satunya negara di dunia yang menggunakan sistem <strong>giliran raja</strong> untuk memilih ketua negara</li>
+        <li>💡 YdPA pertama Malaysia ialah <strong>Tuanku Abdul Halim</strong> (Kedah) – 1957</li>
+        <li>💡 Istana Negara baru dibuka pada tahun 2011 di Jalan Duta, Kuala Lumpur</li>
+        <li>💡 YdPA juga menjadi ketua agama Islam bagi Wilayah Persekutuan, Sabah, Sarawak, Pulau Pinang dan Melaka</li>
+      </ul>
+    </div>
+    <div class="pengayaan-card">
+      <h3>🧠 Berfikir Kritis!</h3>
+      <p style="font-size:1rem;line-height:1.8;color:var(--text-main)">Kenapa sistem giliran untuk memilih YdPA adalah sistem yang <strong>adil dan bijak</strong>? Bincang dengan kawan-kawan kamu! 🤔</p>
+    </div>
+  </div>
+  <footer>
+    <p><strong>Website Pembelajaran Sejarah Tahun 5</strong> | <strong>Hak Cipta © Mohd. Nur Haiqal Bin Rahman</strong></p>
+    <p>EDUP2112 TEKNOLOGI DAN MEDIA PENGAJARAN</p>
+  </footer>
+</div>
+
+<!-- ===== TOPIC 9 PAGE ===== -->
+<div id="topic-9" class="topic-page">
+  <div class="topic-header">
+    <div class="topic-header-icon">🎵</div>
+    <div class="topic-header-info">
+      <h2>Tajuk 9: Identiti Negara Kita</h2>
+      <p>📌 9.3 Lagu Kebangsaan – Negaraku | Tahun 5 KSSR</p>
+    </div>
+    <button class="btn-secondary" onclick="goHome()" style="margin-left:auto">🏠 Kembali</button>
+  </div>
+  <div class="sub-nav" id="nav9">
+    <button class="sub-tab active" onclick="showSubPanel(9,'utama')">🏠 Utama</button>
+    <button class="sub-tab" onclick="showSubPanel(9,'sk')">📌 Standard</button>
+    <button class="sub-tab" onclick="showSubPanel(9,'nota')">📚 Nota</button>
+    <button class="sub-tab" onclick="showSubPanel(9,'flashcard')">🃏 Flashcard</button>
+    <button class="sub-tab" onclick="showSubPanel(9,'aktiviti')">🎮 Aktiviti</button>
+    <button class="sub-tab" onclick="showSubPanel(9,'kuiz')">✏️ Kuiz</button>
+    <button class="sub-tab" onclick="showSubPanel(9,'pemulihan')">💡 Pemulihan</button>
+    <button class="sub-tab" onclick="showSubPanel(9,'pengayaan')">🌟 Pengayaan</button>
+  </div>
+  <div id="t9-utama" class="sub-panel active">
+    <div class="info-card" style="text-align:center">
+      <div style="font-size:4rem;margin-bottom:1rem;animation:iconBounce 2s ease-in-out infinite">🎵</div>
+      <h3 style="font-size:1.5rem">Negaraku... Tanah Tumpahnya Darahku! 🇲🇾</h3>
+      <p style="margin-top:0.5rem">Belajar tentang lagu kebangsaan Malaysia yang penuh makna dan semangat patriotik!</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem">
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(9,'nota')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">📖</div>
+        <div style="color:var(--gold);font-weight:700">Nota Interaktif</div>
+      </div>
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(9,'aktiviti')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">🎮</div>
+        <div style="color:var(--gold);font-weight:700">Isi Lirik!</div>
+      </div>
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(9,'kuiz')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">✏️</div>
+        <div style="color:var(--gold);font-weight:700">Kuiz Digital</div>
+      </div>
+      <div class="info-card" style="text-align:center;cursor:pointer" onclick="showSubPanel(9,'flashcard')">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">🃏</div>
+        <div style="color:var(--gold);font-weight:700">Flashcard</div>
+      </div>
+    </div>
+  </div>
+  <div id="t9-sk" class="sub-panel">
+    <h2 class="section-title">📌 Standard Kandungan & Pembelajaran</h2>
+    <div class="info-card">
+      <span class="badge-sk">9.3</span>
+      <h3>Lagu Kebangsaan</h3>
+    </div>
+    <div class="info-card">
+      <h3>📖 Standard Pembelajaran</h3>
+      <ul>
+        <li>✅ <strong>9.3.1</strong> Nama lagu kebangsaan Malaysia</li>
+        <li>✅ <strong>9.3.2</strong> Sejarah penciptaan lagu kebangsaan</li>
+        <li>✅ <strong>9.3.3</strong> Lirik dan maksud lagu Negaraku</li>
+        <li>✅ <strong>9.3.4</strong> Etika menyanyikan lagu kebangsaan</li>
+        <li>✅ <strong>9.3.5</strong> Kepentingan lagu kebangsaan</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>🌟 EMK</h3>
+      <ul>
+        <li>🌟 <strong>K9.3.6</strong> Peranan lagu kebangsaan dalam membentuk jati diri</li>
+        <li>🌟 <strong>K9.3.7</strong> Kepentingan menyanyikan dengan bersemangat</li>
+        <li>🌟 <strong>K9.3.8</strong> Lagu kebangsaan sebagai simbol perpaduan</li>
+      </ul>
+    </div>
+  </div>
+  <div id="t9-nota" class="sub-panel">
+    <h2 class="section-title">📚 Nota Interaktif – Negaraku</h2>
+    <div class="nota-section">
+      <h3>🎵 Apa itu Negaraku?</h3>
+      <div class="nota-visual">
+        <p style="font-size:1.05rem;color:var(--text-main);line-height:2">
+          <strong>Negaraku</strong> adalah lagu kebangsaan Malaysia. Ia dinyanyikan pada majlis-majlis rasmi, perayaan, dan di sekolah setiap hari Isnin!<br><br>
+          🎵 Nama lagu: <strong>Negaraku</strong><br>
+          📅 Ditetapkan sebagai lagu kebangsaan: <strong>1957</strong><br>
+          🎼 Berasaskan lagu: <em>Terang Bulan</em> (lagu tradisional Perak)<br>
+          ✍️ Lirik ditulis oleh: <strong>Jawatankuasa Istiadat dan Protokol</strong>
+        </p>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>📅 Sejarah Penciptaan Negaraku</h3>
+      <div class="nota-visual">
+        <div class="timeline-item">
+          <div class="timeline-dot">🎵</div>
+          <div class="timeline-content">
+            <h4>Asal usul melodi</h4>
+            <p>Melodi Negaraku berasal daripada lagu <strong>"Terang Bulan"</strong> yang popular di Perak. Ada juga yang berpendapat ia berasal daripada lagu Perancis "La Rosalie".</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">1957</div>
+          <div class="timeline-content">
+            <h4>Ditetapkan 1957</h4>
+            <p>Negaraku ditetapkan sebagai lagu kebangsaan Malaysia pada hari kemerdekaan, <strong>31 Ogos 1957</strong>.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">🌟</div>
+          <div class="timeline-content">
+            <h4>Makna Mendalam</h4>
+            <p>Setiap baris lirik mengandungi harapan dan doa seluruh rakyat Malaysia untuk negara yang aman, makmur dan berdaulat.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>🎶 Lirik & Maksud Negaraku</h3>
+      <div class="nota-visual" style="border-left-color:var(--tq)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+          <div>
+            <h4 style="color:var(--gold);margin-bottom:0.8rem">🎵 Lirik</h4>
+            <p style="color:var(--text-main);line-height:2.5;font-size:1rem">
+              Negaraku,<br>
+              Tanah tumpahnya darahku,<br>
+              Rakyat hidup,<br>
+              Bersatu dan maju,<br>
+              Rahmat bahagia,<br>
+              Tuhan kurniakan,<br>
+              Raja kita,<br>
+              Selamat bertakhta,<br>
+              Rahmat bahagia,<br>
+              Tuhan kurniakan,<br>
+              Raja kita,<br>
+              Selamat bertakhta.
+            </p>
+          </div>
+          <div>
+            <h4 style="color:var(--gold);margin-bottom:0.8rem">💡 Maksud</h4>
+            <p style="color:var(--text-muted);line-height:2.5;font-size:0.9rem">
+              Negara tercinta<br>
+              Tanah tempat aku dilahirkan<br>
+              Rakyat Malaysia hidup<br>
+              Bersatu dan maju ke hadapan<br>
+              Nikmat kebahagiaan<br>
+              Yang Allah kurniakan<br>
+              Raja kita Yang di-Pertuan Agong<br>
+              Semoga kekal memerintah<br>
+              Nikmat kebahagiaan<br>
+              Yang Allah kurniakan<br>
+              Raja kita<br>
+              Semoga kekal memerintah
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>✅ Etika Menyanyikan Lagu Kebangsaan</h3>
+      <div class="nota-visual">
+        <p style="font-size:1rem;line-height:2.5;color:var(--text-main)">
+          ✅ <strong>Berdiri tegak</strong> dengan sopan semasa lagu dimainkan<br>
+          ✅ <strong>Tangan di sebelah badan</strong> – bersikap hormat<br>
+          ✅ <strong>Menyanyikan dengan ikhlas</strong> dan penuh semangat<br>
+          ✅ <strong>Tidak bercakap-cakap</strong> semasa lagu dimainkan<br>
+          ✅ <strong>Tidak melakukan aktiviti lain</strong> semasa lagu dimainkan<br>
+          ✅ Menghayati <strong>maksud setiap baris</strong> lirik dengan penuh rasa syukur<br><br>
+          ⚠️ Tidak menghormati lagu kebangsaan adalah <strong>satu kesalahan</strong>!
+        </p>
+      </div>
+    </div>
+    <div class="nota-section">
+      <h3>🌟 Peranan Lagu Kebangsaan dalam Membentuk Jati Diri</h3>
+      <div class="nota-visual">
+        <p style="font-size:1rem;line-height:2.2;color:var(--text-main)">
+          🇲🇾 Memupuk semangat <strong>cinta akan negara</strong><br>
+          🤝 Menyatukan <strong>semua kaum</strong> Malaysia<br>
+          💪 Menguatkan semangat <strong>patriotik dan bangga sebagai rakyat Malaysia</strong><br>
+          📜 Mengingatkan kita tentang <strong>sejarah perjuangan</strong> nenek moyang<br>
+          🌟 Menjadi simbol <strong>identiti dan perpaduan</strong> nasional
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="t9-flashcard" class="sub-panel">
+    <h2 class="section-title">🃏 Flashcard – Tajuk 9</h2>
+    <p style="color:var(--text-muted);margin-bottom:1rem">👆 Klik kad untuk lihat jawapan!</p>
+    <div class="flashcard-grid">
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🎵</div>
+        <div class="flashcard-term">Nama Lagu Kebangsaan</div>
+        <div class="flashcard-def">NEGARAKU – lagu kebangsaan Malaysia sejak 1957</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🎼</div>
+        <div class="flashcard-term">Asal Melodi</div>
+        <div class="flashcard-def">Berasal daripada lagu "Terang Bulan" dari Perak</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">📅</div>
+        <div class="flashcard-term">Tahun Ditetapkan</div>
+        <div class="flashcard-def">1957 – semasa kemerdekaan Malaysia pada 31 Ogos</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🧍</div>
+        <div class="flashcard-term">Etika Asas</div>
+        <div class="flashcard-def">Berdiri tegak, tangan di sisi, tidak bercakap-cakap</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">🌟</div>
+        <div class="flashcard-term">Peranan Lagu Kebangsaan</div>
+        <div class="flashcard-def">Membentuk jati diri, menyatukan rakyat, simbol perpaduan negara</div>
+      </div>
+      <div class="flashcard" onclick="flipCard(this)">
+        <div class="flashcard-front">💧</div>
+        <div class="flashcard-term">"Tanah tumpahnya darahku"</div>
+        <div class="flashcard-def">Bermaksud: Tanah tempat kita dilahirkan dan dibesarkan</div>
+      </div>
+    </div>
+  </div>
+  <div id="t9-aktiviti" class="sub-panel">
+    <h2 class="section-title">🎮 Aktiviti Interaktif – Tajuk 9</h2>
+    <!-- Fill blank lyrics -->
+    <div class="activity-card">
+      <h3>🎵 Isi Tempat Kosong – Lirik Negaraku!</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem">Isi lirik yang betul untuk lagu Negaraku!</p>
+      <div id="lyricsActivity">
+        <div class="fill-blank-q">Negara<input type="text" class="fb-input" data-ans="ku" placeholder="___">,</div>
+        <div class="fill-blank-q">Tanah <input type="text" class="fb-input" data-ans="tumpahnya" placeholder="___"> darahku,</div>
+        <div class="fill-blank-q">Rakyat <input type="text" class="fb-input" data-ans="hidup" placeholder="___">,</div>
+        <div class="fill-blank-q">Bersatu dan <input type="text" class="fb-input" data-ans="maju" placeholder="___">,</div>
+        <div class="fill-blank-q">Rahmat <input type="text" class="fb-input" data-ans="bahagia" placeholder="___">,</div>
+        <div class="fill-blank-q"><input type="text" class="fb-input" data-ans="tuhan" placeholder="___"> kurniakan,</div>
+        <div class="fill-blank-q">Raja kita, Selamat <input type="text" class="fb-input" data-ans="bertakhta" placeholder="___">.</div>
+      </div>
+      <button class="btn-main mt-1" onclick="checkLyrics()" style="font-size:0.95rem">🎵 Semak Lirik!</button>
+      <div id="lyricsResult" style="margin-top:0.8rem;font-weight:700"></div>
+    </div>
+    <!-- Match etika -->
+    <div class="activity-card">
+      <h3>✅ Betul atau Salah – Etika Lagu Kebangsaan?</h3>
+      <div id="etikaQ">
+        <div style="display:flex;flex-direction:column;gap:0.7rem" id="etikaItems">
+          <div class="match-item" data-correct="betul" onclick="checkEtika(this)">🧍 Berdiri tegak semasa lagu dimainkan</div>
+          <div class="match-item" data-correct="salah" onclick="checkEtika(this)">📱 Main telefon semasa lagu dimainkan</div>
+          <div class="match-item" data-correct="betul" onclick="checkEtika(this)">🤫 Diam dan hormat semasa lagu dimainkan</div>
+          <div class="match-item" data-correct="salah" onclick="checkEtika(this)">🗣️ Bercakap-cakap semasa lagu dimainkan</div>
+          <div class="match-item" data-correct="betul" onclick="checkEtika(this)">💪 Menyanyikan dengan penuh semangat</div>
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.8rem">
+          <button class="btn-main" onclick="showEtikaAns('betul')" style="background:rgba(34,197,94,0.8);font-size:0.85rem;padding:0.6rem 1rem">✅ Betul</button>
+          <button class="btn-main" onclick="showEtikaAns('salah')" style="background:rgba(239,68,68,0.8);font-size:0.85rem;padding:0.6rem 1rem">❌ Salah</button>
+        </div>
+        <div id="etikaResult" style="margin-top:0.8rem;font-weight:700"></div>
+      </div>
+    </div>
+    <!-- Catch game -->
+    <div class="activity-card">
+      <h3>🎯 Tangkap Jawapan yang Betul!</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem">Soalan: <strong id="catchQ9">Apakah nama lagu kebangsaan Malaysia?</strong></p>
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.8rem">Tangkap jawapan yang betul, elakkan yang salah!</p>
+      <button class="btn-main mb-1" onclick="startCatchGame()" style="font-size:0.9rem">▶ Mulakan!</button>
+      <div class="catch-game" id="catchGame9" onmousemove="moveCatcher(event)" onclick="catchItem(event)">
+        <div class="catch-score">Markah: <span id="catchScore">0</span></div>
+        <div class="catch-basket" id="catchBasket">🧺</div>
+      </div>
+    </div>
+    <!-- Word search T9 -->
+    <div class="activity-card">
+      <h3>🔍 Cari Perkataan!</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.8rem">Cari: NEGARAKU, MAJU, RAKYAT, TUHAN, RAJA</p>
+      <div class="word-search-grid" id="ws9"></div>
+    </div>
+  </div>
+  <div id="t9-kuiz" class="sub-panel">
+    <div id="t9-kuiz-start" class="quiz-start">
+      <div style="font-size:3rem;margin-bottom:1rem">🎵</div>
+      <h2>Kuiz Tajuk 9</h2>
+      <p>15 soalan • Masa: 20 minit • Auto semak jawapan</p>
+      <input class="input-field" id="t9-name" placeholder="Nama kamu...">
+      <input class="input-field" id="t9-class" placeholder="Kelas kamu...">
+      <button class="btn-main mt-1" onclick="startQuiz(9)">🚀 Mulakan Kuiz!</button>
+    </div>
+    <div id="t9-kuiz-main" class="hidden">
+      <div style="padding:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem">
+          <span style="color:var(--tq);font-weight:700" id="t9-qtimer">⏱️ 20:00</span>
+          <span class="quiz-progress" id="t9-qprog">Soalan 1/15</span>
+        </div>
+        <div class="quiz-timer-bar"><div class="quiz-timer-fill" id="t9-tbar"></div></div>
+        <div class="quiz-question-text" id="t9-qtext"></div>
+        <div class="quiz-options" id="t9-qopts"></div>
+        <div id="t9-qfeedback"></div>
+        <button class="btn-main mt-1 hidden" id="t9-qnext" onclick="nextQuestion(9)">Seterusnya ▶</button>
+      </div>
+    </div>
+    <div id="t9-kuiz-result" class="quiz-result hidden">
+      <div style="font-size:3rem">🏆</div>
+      <span class="score-big" id="t9-score-display"></span>
+      <div class="result-stars" id="t9-stars"></div>
+      <div class="result-msg" id="t9-result-msg"></div>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn-main" onclick="retryQuiz(9)">🔄 Cuba Lagi</button>
+        <button class="btn-main btn-gold" onclick="showRekodPage()">📊 Lihat Rekod</button>
+        <button class="btn-secondary" onclick="goHome()">🏠 Halaman Utama</button>
+      </div>
+    </div>
+  </div>
+  <div id="t9-pemulihan" class="sub-panel">
+    <h2 class="section-title">💡 Pemulihan – Tajuk 9</h2>
+    <div class="pemulihan-card">
+      <h3>🔑 Fakta Penting</h3>
+      <ul style="line-height:2.2;font-size:1rem">
+        <li>🎵 Nama lagu kebangsaan = <strong>Negaraku</strong></li>
+        <li>📅 Ditetapkan pada tahun = <strong>1957</strong></li>
+        <li>🎼 Melodi berasal daripada lagu = <strong>Terang Bulan</strong></li>
+        <li>🧍 Semasa lagu dimainkan = <strong>berdiri tegak dan hormat</strong></li>
+        <li>🌟 Lagu kebangsaan membentuk = <strong>jati diri dan perpaduan</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div id="t9-pengayaan" class="sub-panel">
+    <h2 class="section-title">🌟 Pengayaan – Tajuk 9</h2>
+    <div class="pengayaan-card">
+      <h3>🌟 Ketahui Lebih!</h3>
+      <ul style="line-height:2;font-size:1rem">
+        <li>💡 Negaraku dinyanyikan di <strong>Sukan Olimpik</strong> apabila atlet Malaysia menang emas!</li>
+        <li>💡 Lagu kebangsaan dimainkan setiap pagi <strong>Isnin</strong> di semua sekolah Malaysia</li>
+        <li>💡 Terdapat undang-undang yang <strong>melindungi</strong> lagu kebangsaan daripada diperlekehkan</li>
+        <li>💡 Setiap negara mempunyai lagu kebangsaan sendiri sebagai identiti mereka</li>
+      </ul>
+    </div>
+    <div class="pengayaan-card">
+      <h3>🎨 Projek Kreatif!</h3>
+      <p style="font-size:1rem;line-height:1.8;color:var(--text-main)">Lukis atau reka bentuk <strong>poster Negaraku</strong> dengan menuliskan lirik lagu dan hiasan yang patriotik! Tunjukkan kepada Cikgu Haiqal! 🎨</p>
+    </div>
+  </div>
+  <footer>
+    <p><strong>Website Pembelajaran Sejarah Tahun 5</strong> | <strong>Hak Cipta © Mohd. Nur Haiqal Bin Rahman</strong></p>
+    <p>EDUP2112 TEKNOLOGI DAN MEDIA PENGAJARAN</p>
+  </footer>
+</div>
+
+<!-- ===== REKOD PAGE ===== -->
+<div id="page-rekod" class="page">
+  <div style="padding:1.5rem;max-width:1000px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+      <button class="btn-secondary" onclick="goHome()">← Kembali</button>
+      <h2 style="color:var(--gold);font-size:1.5rem">📊 Rekod Jawapan Kuiz</h2>
+    </div>
+    <div class="rekod-controls">
+      <button class="btn-main" onclick="downloadCSV()" style="font-size:0.9rem;padding:0.6rem 1.2rem">📥 Muat Turun CSV</button>
+      <button class="btn-main" onclick="downloadJSON()" style="font-size:0.9rem;padding:0.6rem 1.2rem;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000">📥 Muat Turun JSON</button>
+      <button class="btn-secondary" onclick="clearAllRekod()" style="border-color:var(--red);color:var(--red)">🗑️ Padam Semua Rekod</button>
+    </div>
+    <div class="table-wrap">
+      <table id="rekodTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nama Murid</th>
+            <th>Kelas</th>
+            <th>Topik</th>
+            <th>Markah</th>
+            <th>Gred</th>
+            <th>Tarikh & Masa</th>
+            <th>Tindakan</th>
+          </tr>
+        </thead>
+        <tbody id="rekodBody"></tbody>
+      </table>
+    </div>
+    <div id="noRekod" class="text-center" style="padding:3rem;color:var(--text-muted);font-size:1.1rem">
+      📭 Tiada rekod lagi. Jawab kuiz untuk rekod pertama kamu!
+    </div>
+  </div>
+  <footer style="margin-top:2rem">
+    <p><strong>Website Pembelajaran Sejarah Tahun 5</strong> | <strong>Hak Cipta © Mohd. Nur Haiqal Bin Rahman</strong></p>
+    <p>EDUP2112 TEKNOLOGI DAN MEDIA PENGAJARAN</p>
+  </footer>
+</div>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+
+<script>
+// ===== QUIZ DATA =====
+const quizData = {
+  7: [
+    {q:"Bilakah Malaysia mencapai kemerdekaan?",opts:["17 Ogos 1945","31 Ogos 1957","31 Ogos 1963","16 September 1963"],ans:1},
+    {q:"Siapakah 'Bapa Malaysia'?",opts:["Tun Abdul Razak","Dato' Onn Jaafar","Tunku Abdul Rahman","Tun Hussein Onn"],ans:2},
+    {q:"Di manakah kemerdekaan Malaysia diisytiharkan?",opts:["Dataran Merdeka","Stadium Merdeka","Istana Negara","Stadium Nasional"],ans:1},
+    {q:"Berapa kali Tunku Abdul Rahman melaungkan 'Merdeka'?",opts:["3 kali","5 kali","7 kali","9 kali"],ans:2},
+    {q:"UMNO ditubuhkan pada tahun berapa?",opts:["1945","1946","1948","1951"],ans:1},
+    {q:"Siapakah yang mengasaskan UMNO?",opts:["Tunku Abdul Rahman","Dato' Abdul Razak","Dato' Onn Jaafar","Tan Cheng Lock"],ans:2},
+    {q:"Parti Perikatan terdiri daripada gabungan...",opts:["UMNO sahaja","UMNO + MCA","UMNO + MCA + MIC","UMNO + MIC"],ans:2},
+    {q:"Rundingan kemerdekaan berlangsung di mana pada 1956?",opts:["New York","London","Paris","Sydney"],ans:1},
+    {q:"Pilihan raya umum pertama Tanah Melayu berlaku pada tahun...",opts:["1953","1954","1955","1956"],ans:2},
+    {q:"Malayan Union dicadangkan oleh British pada tahun...",opts:["1944","1945","1946","1947"],ans:2},
+    {q:"Apakah yang ditentang oleh orang Melayu dalam Malayan Union?",opts:["Ekonomi","Kedudukan raja-raja Melayu","Bahasa","Agama"],ans:1},
+    {q:"Persekutuan Tanah Melayu ditubuhkan pada tahun...",opts:["1946","1947","1948","1949"],ans:2},
+    {q:"Tan Cheng Lock mewakili kaum...",opts:["Melayu","India","Cina","Serani"],ans:2},
+    {q:"V.T. Sambanthan mewakili kaum...",opts:["Melayu","India","Cina","Iban"],ans:1},
+    {q:"Apakah semangat yang harus kita contohi daripada tokoh pejuang kemerdekaan?",opts:["Tamak","Patriotik dan berani","Malas","Penakut"],ans:1}
+  ],
+  8: [
+    {q:"Apakah maksud 'Yang di-Pertuan Agong'?",opts:["Perdana Menteri","Ketua Negara Malaysia","Gabenor","Sultan"],ans:1},
+    {q:"Berapa lamakah tempoh pemerintahan Yang di-Pertuan Agong?",opts:["3 tahun","4 tahun","5 tahun","6 tahun"],ans:2},
+    {q:"Berapakah bilangan Raja Melayu yang layak menjadi YdPA?",opts:["7","8","9","10"],ans:2},
+    {q:"Di manakah Yang di-Pertuan Agong tinggal secara rasmi?",opts:["Bangunan Parlimen","Istana Negara","Perdana Putra","Balai Rong Seri"],ans:1},
+    {q:"Apakah alat muzik diraja yang digunakan semasa pertabalan?",opts:["Gamelan","Gambang","Nobat","Gong"],ans:2},
+    {q:"YdPA merupakan Panglima Tertinggi bagi...",opts:["Polis","Angkatan Tentera","Bomba","Kastam"],ans:1},
+    {q:"Sistem pemilihan YdPA di Malaysia adalah...",opts:["Pilihan raya","Dilantik PM","Sistem giliran","Warisan"],ans:2},
+    {q:"Konsep pemerintahan YdPA berdasarkan...",opts:["Raja Mutlak","Raja Berperlembagaan","Diktator","Demokrasi Rakyat"],ans:1},
+    {q:"YdPA adalah lambang apakah bagi rakyat Malaysia?",opts:["Kemewahan","Perpaduan","Kuasa","Kekayaan"],ans:1},
+    {q:"Siapa yang melantik Perdana Menteri?",opts:["Rakyat","Majlis Raja-Raja","Yang di-Pertuan Agong","Parlimen"],ans:2},
+    {q:"Negeri mana yang mempunyai 'Raja' (bukan Sultan)?",opts:["Perak","Johor","Perlis","Pahang"],ans:2},
+    {q:"Apakah nama gelaran raja di Negeri Sembilan?",opts:["Sultan","Raja","Yang Dipertua Besar","Tengku"],ans:2},
+    {q:"Apakah kepentingan menghargai institusi YdPA?",opts:["Untuk kaya","Lambang perpaduan","Untuk terkenal","Tiada kepentingan"],ans:1},
+    {q:"Majlis yang memilih YdPA dipanggil...",opts:["Majlis Negara","Parlimen","Majlis Raja-Raja","Majlis Pembesar"],ans:2},
+    {q:"Prinsip Rukun Negara yang berkaitan YdPA ialah...",opts:["Kepercayaan kepada Tuhan","Kesetiaan kepada Raja dan Negara","Keluhuran Perlembagaan","Kedaulatan Undang-undang"],ans:1}
+  ],
+  9: [
+    {q:"Apakah nama lagu kebangsaan Malaysia?",opts:["Malaysia Berjaya","Negaraku","Setia","Warisan"],ans:1},
+    {q:"Pada tahun berapakah Negaraku ditetapkan sebagai lagu kebangsaan?",opts:["1955","1956","1957","1963"],ans:2},
+    {q:"Melodi Negaraku berasal daripada lagu...",opts:["Rasa Sayang","Terang Bulan","Burung Kakak Tua","Wau Bulan"],ans:1},
+    {q:"Apakah etika utama semasa lagu kebangsaan dimainkan?",opts:["Duduk diam","Berdiri tegak dan hormat","Bertepuk tangan","Melompat-lompat"],ans:1},
+    {q:"Apakah maksud 'Tanah tumpahnya darahku'?",opts:["Tanah berdarah","Tanah tempat dilahirkan","Tanah merah","Tanah subur"],ans:1},
+    {q:"Apakah peranan lagu kebangsaan dalam pembentukan jati diri?",opts:["Menghiburkan","Memupuk cinta akan negara","Melatih menyanyi","Untuk berhibur"],ans:1},
+    {q:"Baris manakah yang betul dalam Negaraku?",opts:["Rakyat maju bersatu","Bersatu dan maju","Maju dan bersatu","Rakyat hidup bersatu"],ans:1},
+    {q:"Apakah yang berlaku jika tidak menghormati lagu kebangsaan?",opts:["Mendapat hadiah","Dipuji","Satu kesalahan","Tiada apa"],ans:2},
+    {q:"Siapakah yang kita doakan dalam Negaraku?",opts:["Perdana Menteri","Raja kita","Rakyat jelata","Semua rakyat"],ans:1},
+    {q:"Lagu kebangsaan dimainkan di sekolah pada hari...",opts:["Selasa","Rabu","Isnin","Jumaat"],ans:2},
+    {q:"'Rahmat bahagia, Tuhan kurniakan' bermaksud...",opts:["Kita kaya raya","Nikmat kebahagiaan dari Allah","Kita gembira","Tuhan ada"],ans:1},
+    {q:"Apakah yang tidak sepatutnya dilakukan semasa lagu kebangsaan?",opts:["Berdiri","Main telefon","Diam","Hormat"],ans:1},
+    {q:"Negaraku adalah simbol apakah bagi Malaysia?",opts:["Kekayaan","Perpaduan dan identiti","Kesenian","Keindahan"],ans:1},
+    {q:"Baris pertama Negaraku ialah...",opts:["Tanah tumpahnya darahku","Rakyat hidup","Negaraku","Rahmat bahagia"],ans:2},
+    {q:"Apakah nilai yang terkandung dalam lagu Negaraku?",opts:["Tamak","Patriotisme dan cinta negara","Dengki","Malas"],ans:1}
+  ]
+};
+
+// ===== STATE =====
+let currentTopic = null;
+let quizState = {};
+let quizTimers = {};
+let matchState = {};
+let selectedEtikaItem = null;
+let catchInterval = null;
+let catchScore = 0;
+let musicOn = false;
+let audioCtx = null;
+
+// ===== LOADING =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loading-screen').classList.add('hide');
+    initClock();
+    initFlagStripes();
+    initWordSearch(7);
+    initWordSearch(8);
+    initWordSearch(9);
+    loadRekod();
+  }, 2800);
+});
+
+// ===== CLOCK =====
+function initClock() {
+  function update() {
+    const now = new Date();
+    const t = now.toLocaleTimeString('ms-MY');
+    const d = now.toLocaleDateString('ms-MY',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    document.getElementById('clock-display').textContent = `📅 ${d} 🕐 ${t}`;
+  }
+  update(); setInterval(update, 1000);
+}
+
+// ===== FLAG STRIPES =====
+function initFlagStripes() {
+  const c = document.getElementById('flagStripes');
+  for(let i=0;i<20;i++){
+    const s=document.createElement('div');
+    s.className='stripe';
+    c.appendChild(s);
+  }
+}
+
+// ===== THEME =====
+function toggleTheme() {
+  const b = document.body;
+  b.dataset.theme = b.dataset.theme === 'light' ? '' : 'light';
+}
+
+// ===== MUSIC =====
+function toggleMusic() {
+  musicOn = !musicOn;
+  document.getElementById('musicBtn').textContent = musicOn ? '🔊' : '🔇';
+  if(musicOn) {
+    playBgMusic();
+  } else {
+    stopBgMusic();
+  }
+}
+let oscNodes = [];
+function playBgMusic() {
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Simple patriotic melody
+    const notes = [261,293,329,349,392,440,493,523];
+    let t = audioCtx.currentTime;
+    oscNodes = [];
+    function playNote(freq, start, dur) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.05, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+      osc.start(start); osc.stop(start + dur);
+      oscNodes.push(osc);
+    }
+    const melody = [392,392,440,392,349,329,293,261,261,293,329,349,392,392,392];
+    melody.forEach((f,i) => playNote(f, t+i*0.4, 0.35));
+    // Loop
+    setTimeout(() => { if(musicOn) playBgMusic(); }, melody.length*400+100);
+  } catch(e) {}
+}
+function stopBgMusic() {
+  if(oscNodes.length) { oscNodes.forEach(o => { try{o.stop();}catch(e){} }); oscNodes=[]; }
+}
+
+// ===== NAVIGATION =====
+function goHome() {
+  document.querySelectorAll('.page,.topic-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-home').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  currentTopic = null;
+}
+function openTopic(n) {
+  document.querySelectorAll('.page,.topic-page').forEach(p => p.classList.remove('active'));
+  const tp = document.getElementById('topic-'+n);
+  tp.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  currentTopic = n;
+}
+function showRekodPage() {
+  document.querySelectorAll('.page,.topic-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-rekod').classList.add('active');
+  renderRekod();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showSubPanel(t, panel) {
+  const prefix = `t${t}-`;
+  document.querySelectorAll(`[id^="${prefix}"]`).forEach(p => {
+    if(p.classList.contains('sub-panel')) p.classList.remove('active');
+  });
+  const el = document.getElementById(`t${t}-${panel}`);
+  if(el) el.classList.add('active');
+  // Update tabs
+  const nav = document.getElementById(`nav${t}`);
+  if(nav) {
+    nav.querySelectorAll('.sub-tab').forEach(tab => tab.classList.remove('active'));
+    const clicked = Array.from(nav.querySelectorAll('.sub-tab')).find(tab => 
+      tab.getAttribute('onclick') && tab.getAttribute('onclick').includes(`'${panel}'`)
+    );
+    if(clicked) clicked.classList.add('active');
+  }
+  // Init quiz if opening
+  if(panel === 'kuiz') initQuizUI(t);
+}
+
+// ===== FLIP CARD =====
+function flipCard(el) { el.classList.toggle('flipped'); }
+
+// ===== MATCH GAME =====
+function selectMatch(t, el, side) {
+  if(el.classList.contains('correct')) return;
+  const id = `match${side.charAt(0).toUpperCase()+side.slice(1)}${t}`;
+  const container = document.getElementById(id);
+  // Deselect others on same side
+  container.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+
+  if(!matchState[t]) matchState[t] = {};
+  matchState[t][side] = el;
+
+  // Check if both sides selected
+  if(matchState[t].left && matchState[t].right) {
+    const L = matchState[t].left;
+    const R = matchState[t].right;
+    if(L.dataset.id === R.dataset.id) {
+      L.classList.remove('selected'); R.classList.remove('selected');
+      L.classList.add('correct'); R.classList.add('correct');
+      spawnConfetti();
+    } else {
+      L.classList.add('wrong'); R.classList.add('wrong');
+      setTimeout(() => {
+        L.classList.remove('wrong','selected');
+        R.classList.remove('wrong','selected');
+      }, 800);
+    }
+    matchState[t] = {};
+    // Check all matched
+    const allLeft = document.querySelectorAll(`#matchLeft${t} .match-item`);
+    if([...allLeft].every(i=>i.classList.contains('correct'))) {
+      document.getElementById(`matchResult${t}`).textContent = '🎉 Tahniah! Semua padanan betul!';
+    }
+  }
+}
+
+// ===== FILL BLANK =====
+function checkFillBlank(t) {
+  const container = document.getElementById(`fillBlank${t}`) || document.getElementById('lyricsActivity');
+  const inputs = container.querySelectorAll('.fb-input');
+  let correct = 0;
+  inputs.forEach(inp => {
+    const userAns = inp.value.trim().toLowerCase();
+    const correctAns = inp.dataset.ans.toLowerCase();
+    if(userAns === correctAns || correctAns.split(' ').some(w => userAns === w)) {
+      inp.classList.add('correct'); inp.classList.remove('wrong'); correct++;
+    } else {
+      inp.classList.add('wrong'); inp.classList.remove('correct');
+    }
+  });
+  const total = inputs.length;
+  const res = document.getElementById(`fbResult${t}`);
+  if(res) res.textContent = correct === total ? `🎉 Semua betul! ${correct}/${total}` : `✏️ ${correct}/${total} betul. Cuba lagi!`;
+  res.style.color = correct===total ? '#22c55e' : '#ef4444';
+}
+function checkLyrics() { checkFillBlank(9); document.getElementById('lyricsResult').textContent = document.getElementById('fbResult9').textContent; }
+
+// ===== WORD SEARCH =====
+const wsWords = {
+  7: ['MERDEKA','TUNKU','UMNO','PERIKATAN','LONDON'],
+  8: ['AGONG','RAJA','NOBAT','MAHKOTA','ISTANA'],
+  9: ['NEGARAKU','MAJU','RAKYAT','TUHAN','RAJA']
+};
+const wsGrids = {};
+function initWordSearch(t) {
+  const container = document.getElementById(`ws${t}`);
+  if(!container) return;
+  const size = 10;
+  const grid = Array.from({length:size},()=>Array(size).fill(''));
+  const words = wsWords[t];
+  const placed = new Set();
+  // Place words horizontally/vertically
+  words.forEach(word => {
+    let tries = 0;
+    while(tries < 100) {
+      const dir = Math.random() > 0.5 ? 'h' : 'v';
+      const row = Math.floor(Math.random()*(dir==='h'?size:size-word.length));
+      const col = Math.floor(Math.random()*(dir==='v'?size:size-word.length));
+      let canPlace = true;
+      for(let i=0;i<word.length;i++) {
+        const r = dir==='h'?row:row+i;
+        const c = dir==='h'?col+i:col;
+        if(grid[r][c] && grid[r][c]!==word[i]) { canPlace=false; break; }
+      }
+      if(canPlace) {
+        for(let i=0;i<word.length;i++) {
+          const r = dir==='h'?row:row+i;
+          const c = dir==='h'?col+i:col;
+          grid[r][c] = word[i];
+        }
+        break;
+      }
+      tries++;
+    }
+  });
+  // Fill empty with random letters
+  const alpha = 'ABCDEFGHIJKLMNOPRSTUVWY';
+  for(let r=0;r<size;r++) for(let c=0;c<size;c++) {
+    if(!grid[r][c]) grid[r][c] = alpha[Math.floor(Math.random()*alpha.length)];
+  }
+  wsGrids[t] = grid;
+  container.innerHTML = '';
+  for(let r=0;r<size;r++) for(let c=0;c<size;c++) {
+    const cell = document.createElement('div');
+    cell.className='ws-cell';
+    cell.textContent=grid[r][c];
+    cell.dataset.r=r; cell.dataset.c=c;
+    cell.onclick=()=>toggleWsCell(t,cell);
+    container.appendChild(cell);
+  }
+}
+let wsSelected = {};
+function toggleWsCell(t, cell) {
+  if(!wsSelected[t]) wsSelected[t]=[];
+  if(cell.classList.contains('selected')) {
+    cell.classList.remove('selected');
+    wsSelected[t] = wsSelected[t].filter(c=>c!==cell);
+  } else {
+    cell.classList.add('selected');
+    wsSelected[t].push(cell);
+    // Check if selected cells form a word
+    checkWsWord(t);
+  }
+}
+function checkWsWord(t) {
+  const sel = wsSelected[t];
+  if(!sel||sel.length<2) return;
+  const word = sel.map(c=>c.textContent).join('');
+  const wordRev = [...word].reverse().join('');
+  if(wsWords[t].includes(word)||wsWords[t].includes(wordRev)) {
+    sel.forEach(c=>{c.classList.remove('selected');c.classList.add('found');});
+    wsSelected[t]=[];
+    spawnConfetti();
+    const sc = document.getElementById(`wsScore${t}`);
+    if(sc) {
+      const found = document.querySelectorAll(`#ws${t} .ws-cell.found`).length;
+      sc.textContent=`✅ Ditemui! Terus cari!`;
+    }
+  }
+}
+
+// ===== DRAG DROP =====
+let dragVal = '';
+document.addEventListener('dragstart', e => {
+  if(e.target.classList.contains('drag-item')) dragVal=e.target.dataset.val;
+});
+function dropItem(target, e) {
+  e.preventDefault();
+  if(!target.classList.contains('filled')) {
+    target.textContent = dragVal;
+    target.classList.add('filled');
+    target.dataset.placed = dragVal;
+  }
+}
+function checkDrag(t) {
+  const targets = document.querySelectorAll(`#t${t}-aktiviti .drag-target`);
+  let correct = 0;
+  targets.forEach(tg => {
+    if(tg.dataset.placed === tg.dataset.expect) {
+      tg.style.borderColor='#22c55e'; correct++;
+    } else {
+      tg.style.borderColor='#ef4444';
+    }
+  });
+  const res = document.getElementById(`dragResult${t}`);
+  res.textContent = correct===targets.length ? '🎉 Semua betul! Tahniah!' : `${correct}/${targets.length} betul. Cuba lagi!`;
+  res.style.color = correct===targets.length ? '#22c55e':'#ef4444';
+  if(correct===targets.length) spawnConfetti();
+}
+
+// ===== IMAGE QUIZ T8 =====
+function checkImgQ8(el, correct) {
+  document.querySelectorAll('#t8-aktiviti .quiz-opt').forEach(o=>o.classList.add('disabled'));
+  el.classList.add(correct?'correct':'wrong');
+  document.getElementById('imgQ8Result').textContent = correct?'🎉 Betul! Nobat ialah alat muzik diraja!':'❌ Salah! Jawapan betul ialah Nobat.';
+  document.getElementById('imgQ8Result').style.color = correct?'#22c55e':'#ef4444';
+  if(correct) spawnConfetti();
+}
+
+// ===== ETIKA GAME =====
+function checkEtika(el) { selectedEtikaItem = el; }
+function showEtikaAns(ans) {
+  if(!selectedEtikaItem) {
+    document.getElementById('etikaResult').textContent='⚠️ Pilih satu penyataan dahulu!';
+    return;
+  }
+  const correct = selectedEtikaItem.dataset.correct === ans;
+  selectedEtikaItem.classList.add(correct?'correct':'wrong');
+  document.getElementById('etikaResult').textContent = correct?'🎉 Betul!':'❌ Cuba lagi!';
+  document.getElementById('etikaResult').style.color = correct?'#22c55e':'#ef4444';
+  if(correct) spawnConfetti();
+  selectedEtikaItem = null;
+}
+
+// ===== CATCH GAME =====
+const catchItems = {
+  correct: ['Negaraku','31 Ogos','Merdeka','Tunku'],
+  wrong: ['Beatles','Pizza','Football','Twitter']
+};
+function startCatchGame() {
+  if(catchInterval) clearInterval(catchInterval);
+  catchScore=0; document.getElementById('catchScore').textContent='0';
+  const game = document.getElementById('catchGame9');
+  // Clear old items
+  game.querySelectorAll('.catch-item').forEach(i=>i.remove());
+  let spawnCount=0;
+  catchInterval = setInterval(() => {
+    spawnCount++;
+    if(spawnCount>15) { clearInterval(catchInterval); return; }
+    const isCorrect = Math.random()>0.4;
+    const pool = isCorrect ? catchItems.correct : catchItems.wrong;
+    const text = pool[Math.floor(Math.random()*pool.length)];
+    const item = document.createElement('div');
+    item.className='catch-item';
+    item.textContent = text;
+    item.dataset.correct = isCorrect?'1':'0';
+    item.style.left = Math.random()*80+'%';
+    item.style.animationDuration = (2+Math.random()*2)+'s';
+    item.onclick = (e) => {
+      e.stopPropagation();
+      if(item.dataset.correct==='1') {
+        catchScore+=10;
+        document.getElementById('catchScore').textContent=catchScore;
+        item.style.color='#22c55e';
+        spawnConfetti();
+      } else {
+        catchScore=Math.max(0,catchScore-5);
+        document.getElementById('catchScore').textContent=catchScore;
+        item.style.color='#ef4444';
+      }
+      item.remove();
+    };
+    game.appendChild(item);
+    setTimeout(()=>item.remove(),4500);
+  }, 1000);
+}
+function moveCatcher(e) {
+  const basket = document.getElementById('catchBasket');
+  const game = document.getElementById('catchGame9');
+  const rect = game.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  basket.style.left = Math.min(Math.max(x-20,0), rect.width-50)+'px';
+}
+
+// ===== QUIZ =====
+function initQuizUI(t) {
+  const qs = document.getElementById(`t${t}-kuiz-start`);
+  const qm = document.getElementById(`t${t}-kuiz-main`);
+  const qr = document.getElementById(`t${t}-kuiz-result`);
+  if(qs) qs.classList.remove('hidden');
+  if(qm) qm.classList.add('hidden');
+  if(qr) qr.classList.add('hidden');
+}
+function startQuiz(t) {
+  const name = document.getElementById(`t${t}-name`).value.trim();
+  const cls = document.getElementById(`t${t}-class`).value.trim();
+  if(!name||!cls) { alert('Sila masukkan nama dan kelas kamu! 😊'); return; }
+
+  quizState[t] = {
+    name, cls,
+    questions: [...quizData[t]].sort(()=>Math.random()-0.5),
+    current: 0,
+    score: 0,
+    startTime: Date.now(),
+    timeLeft: 20*60
+  };
+
+  document.getElementById(`t${t}-kuiz-start`).classList.add('hidden');
+  document.getElementById(`t${t}-kuiz-main`).classList.remove('hidden');
+  renderQuestion(t);
+  startQuizTimer(t);
+}
+function startQuizTimer(t) {
+  if(quizTimers[t]) clearInterval(quizTimers[t]);
+  quizTimers[t] = setInterval(() => {
+    if(!quizState[t]) return;
+    quizState[t].timeLeft--;
+    const tl = quizState[t].timeLeft;
+    const m = String(Math.floor(tl/60)).padStart(2,'0');
+    const s = String(tl%60).padStart(2,'0');
+    const el = document.getElementById(`t${t}-qtimer`);
+    if(el) el.textContent = `⏱️ ${m}:${s}`;
+    const bar = document.getElementById(`t${t}-tbar`);
+    if(bar) {
+      const pct = (tl/(20*60))*100;
+      bar.style.width=pct+'%';
+      if(pct<25) bar.classList.add('warning');
+    }
+    if(tl<=0) { clearInterval(quizTimers[t]); endQuiz(t); }
+  }, 1000);
+}
+function renderQuestion(t) {
+  const qs = quizState[t];
+  if(!qs) return;
+  const q = qs.questions[qs.current];
+  document.getElementById(`t${t}-qprog`).textContent = `Soalan ${qs.current+1}/${qs.questions.length}`;
+  document.getElementById(`t${t}-qtext`).textContent = `${qs.current+1}. ${q.q}`;
+  document.getElementById(`t${t}-qfeedback`).innerHTML = '';
+  document.getElementById(`t${t}-qnext`).classList.add('hidden');
+  const optsEl = document.getElementById(`t${t}-qopts`);
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className='quiz-opt';
+    btn.textContent = `${['A','B','C','D'][i]}. ${opt}`;
+    btn.onclick = () => selectAnswer(t, i, q.ans, btn);
+    optsEl.appendChild(btn);
+  });
+}
+function selectAnswer(t, selected, correct, btn) {
+  document.querySelectorAll(`#t${t}-qopts .quiz-opt`).forEach(b=>b.classList.add('disabled'));
+  const isCorrect = selected===correct;
+  btn.classList.add(isCorrect?'correct':'wrong');
+  if(!isCorrect) {
+    const opts = document.querySelectorAll(`#t${t}-qopts .quiz-opt`);
+    opts[correct].classList.add('correct');
+  }
+  if(isCorrect) quizState[t].score++;
+  const fb = document.getElementById(`t${t}-qfeedback`);
+  fb.className='quiz-feedback '+(isCorrect?'correct':'wrong');
+  fb.textContent = isCorrect ? '🎉 Betul! Tahniah!' : '❌ Salah! Jangan putus asa, cuba lagi!';
+  if(isCorrect) spawnConfetti();
+  document.getElementById(`t${t}-qnext`).classList.remove('hidden');
+}
+function nextQuestion(t) {
+  quizState[t].current++;
+  if(quizState[t].current >= quizState[t].questions.length) {
+    endQuiz(t);
+  } else {
+    renderQuestion(t);
+  }
+}
+function endQuiz(t) {
+  clearInterval(quizTimers[t]);
+  const qs = quizState[t];
+  const score = qs.score;
+  const total = qs.questions.length;
+  const pct = Math.round((score/total)*100);
+  document.getElementById(`t${t}-kuiz-main`).classList.add('hidden');
+  document.getElementById(`t${t}-kuiz-result`).classList.remove('hidden');
+  document.getElementById(`t${t}-score-display`).textContent = `${score}/${total} (${pct}%)`;
+  let stars='', msg='';
+  if(pct>=80){stars='⭐⭐⭐';msg='🌟 Cemerlang! Kamu sangat pandai!';}
+  else if(pct>=60){stars='⭐⭐';msg='👍 Bagus! Teruskan usaha!';}
+  else {stars='⭐';msg='💪 Jangan putus asa! Baca nota lagi dan cuba semula!';}
+  document.getElementById(`t${t}-stars`).textContent=stars;
+  document.getElementById(`t${t}-result-msg`).textContent=msg;
+  if(pct>=80) spawnConfetti();
+  // Save record
+  saveRekod({
+    name: qs.name, cls: qs.cls,
+    topic: `Tajuk ${t}`,
+    score: `${score}/${total}`,
+    pct,
+    date: new Date().toLocaleString('ms-MY')
+  });
+}
+function retryQuiz(t) {
+  initQuizUI(t);
+  const n = document.getElementById(`t${t}-name`).value;
+  const c = document.getElementById(`t${t}-class`).value;
+}
+
+// ===== REKOD =====
+function saveRekod(data) {
+  const records = JSON.parse(localStorage.getItem('sejarah5_rekod')||'[]');
+  records.push(data);
+  localStorage.setItem('sejarah5_rekod', JSON.stringify(records));
+}
+function loadRekod() { renderRekod(); }
+function renderRekod() {
+  const records = JSON.parse(localStorage.getItem('sejarah5_rekod')||'[]');
+  const tbody = document.getElementById('rekodBody');
+  const noRekod = document.getElementById('noRekod');
+  if(!tbody) return;
+  tbody.innerHTML='';
+  if(!records.length) { noRekod.classList.remove('hidden'); return; }
+  noRekod.classList.add('hidden');
+  records.forEach((r,i) => {
+    const grade = r.pct>=80?'A':r.pct>=60?'B':r.pct>=40?'C':'D';
+    const tr = document.createElement('tr');
+    tr.innerHTML=`
+      <td>${i+1}</td>
+      <td><strong>${r.name||'-'}</strong></td>
+      <td>${r.cls||'-'}</td>
+      <td>${r.topic}</td>
+      <td style="color:var(--tq);font-weight:700">${r.score}</td>
+      <td><span class="grade-badge grade-${grade}">${grade} (${r.pct}%)</span></td>
+      <td style="font-size:0.82rem">${r.date}</td>
+      <td><button class="btn-del" onclick="deleteRekod(${i})">🗑️ Padam</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+function deleteRekod(i) {
+  if(!confirm('Padam rekod ini?')) return;
+  const records = JSON.parse(localStorage.getItem('sejarah5_rekod')||'[]');
+  records.splice(i,1);
+  localStorage.setItem('sejarah5_rekod', JSON.stringify(records));
+  renderRekod();
+}
+function clearAllRekod() {
+  if(!confirm('Padam SEMUA rekod? Ini tidak boleh dibatalkan.')) return;
+  localStorage.removeItem('sejarah5_rekod');
+  renderRekod();
+}
+function downloadCSV() {
+  const records = JSON.parse(localStorage.getItem('sejarah5_rekod')||'[]');
+  if(!records.length){alert('Tiada rekod!');return;}
+  const header='Nama,Kelas,Topik,Markah,Peratus,Tarikh\n';
+  const rows=records.map(r=>`"${r.name}","${r.cls}","${r.topic}","${r.score}","${r.pct}%","${r.date}"`).join('\n');
+  const blob=new Blob([header+rows],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='rekod_kuiz_sejarah5.csv';
+  a.click();
+}
+function downloadJSON() {
+  const records = JSON.parse(localStorage.getItem('sejarah5_rekod')||'[]');
+  if(!records.length){alert('Tiada rekod!');return;}
+  const blob=new Blob([JSON.stringify(records,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='rekod_kuiz_sejarah5.json';
+  a.click();
+}
+
+// ===== AI CHAT =====
+const aiKnowledge = {
+  "kemerdekaan": "Malaysia merdeka pada 31 Ogos 1957! 🇲🇾 Tunku Abdul Rahman melaungkan 'Merdeka!' di Stadium Merdeka, Kuala Lumpur.",
+  "merdeka": "Malaysia merdeka pada 31 Ogos 1957! 🎉 Itu hari yang sangat bersejarah untuk negara kita!",
+  "tunku": "Tunku Abdul Rahman Putra Al-Haj ialah 'Bapa Malaysia' dan Perdana Menteri pertama. Beliau memimpin rundingan kemerdekaan di London pada 1956. 👨‍💼",
+  "umno": "UMNO (United Malays National Organisation) ditubuhkan pada tahun 1946 oleh Dato' Onn Jaafar untuk mempertahankan hak-hak orang Melayu. 🏛️",
+  "perikatan": "Parti Perikatan terdiri daripada UMNO, MCA dan MIC. Mereka berjuang bersama untuk kemerdekaan Malaysia! 🤝",
+  "agong": "Yang di-Pertuan Agong ialah Ketua Negara Malaysia. Baginda dipilih daripada 9 Raja Melayu secara bergilir-gilir selama 5 tahun. 👑",
+  "ydpa": "Yang di-Pertuan Agong (YdPA) ialah Ketua Negara Malaysia. Baginda tinggal di Istana Negara dan menjadi lambang perpaduan rakyat! 👑",
+  "negaraku": "Negaraku ialah lagu kebangsaan Malaysia yang ditetapkan pada tahun 1957! Melodinya berasal daripada lagu 'Terang Bulan'. 🎵",
+  "lagu kebangsaan": "Lagu kebangsaan Malaysia ialah NEGARAKU! Semasa dinyanyikan, kita perlu berdiri tegak dan hormat. 🎵🇲🇾",
+  "nobat": "Nobat ialah alat muzik diraja yang digunakan semasa upacara pertabalan Yang di-Pertuan Agong. 🎺",
+  "istana negara": "Istana Negara ialah tempat tinggal rasmi Yang di-Pertuan Agong di Kuala Lumpur. 🏰",
+  "sejarah": "Saya boleh bantu dengan soalan Sejarah Tahun 5! Tanya tentang kemerdekaan, YdPA, atau lagu kebangsaan ya! 📚",
+  "tahun 5": "Sejarah Tahun 5 merangkumi Tajuk 7 (Kemerdekaan), Tajuk 8 (YdPA) dan Tajuk 9 (Identiti Negara). 📖",
+};
+function sendChat(id) {
+  const input = document.getElementById(`${id}ChatInput`);
+  const msg = input.value.trim();
+  if(!msg) return;
+  addChatMsg(id, msg, 'user');
+  input.value='';
+  document.getElementById(`${id}ChatThinking`).classList.remove('hidden');
+  setTimeout(()=>{
+    document.getElementById(`${id}ChatThinking`).classList.add('hidden');
+    const reply = getAIReply(msg);
+    addChatMsg(id, reply, 'bot');
+  }, 800+Math.random()*600);
+}
+function addChatMsg(id, text, type) {
+  const container = document.getElementById(`${id}Chat`);
+  const div = document.createElement('div');
+  div.className=`chat-msg ${type}`;
+  div.innerHTML=text;
+  container.appendChild(div);
+  container.scrollTop=container.scrollHeight;
+}
+function getAIReply(msg) {
+  const m = msg.toLowerCase();
+  for(const [key, val] of Object.entries(aiKnowledge)) {
+    if(m.includes(key)) return val;
+  }
+  if(m.includes('?') || m.length > 50) {
+    return '🤔 Soalan yang bagus! Untuk soalan yang lebih susah, sila rujuk <strong>Cikgu Haiqal</strong> ya! Saya hanya boleh jawab soalan mudah tentang Sejarah Tahun 5. 😊';
+  }
+  return `Hmm, saya kurang pasti tentang "${msg}". Cuba tanya tentang kemerdekaan, Yang di-Pertuan Agong, atau lagu Negaraku! Untuk soalan susah, sila rujuk <strong>Cikgu Haiqal</strong>. 🧑‍🏫`;
+}
+
+// ===== CONFETTI =====
+function spawnConfetti() {
+  const colors=['#00B4D8','#FFD700','#DC143C','#22c55e','#fff','#FF8800'];
+  for(let i=0;i<18;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.style.cssText=`
+      left:${Math.random()*100}vw;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${1+Math.random()*1.5}s;
+      animation-delay:${Math.random()*0.5}s;
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+    `;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2500);
+  }
+}
+
+// ===== BACK TO TOP =====
+window.addEventListener('scroll',()=>{
+  const btn=document.getElementById('back-to-top');
+  btn.classList.toggle('show',window.scrollY>300);
+});
+
+// Mobile touch for drag
+document.addEventListener('touchstart',(e)=>{
+  const el=e.target.closest('.drag-item');
+  if(el) dragVal=el.dataset.val;
+},{passive:true});
+</script>
+</body>
+</html>
